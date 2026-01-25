@@ -3,22 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Impostor — Sala + Ronda (link único)</title>
+  <title>Impostor — Código de ronda</title>
   <style>
     :root{
       --bg:#0b0f17; --card:#121a2a; --card2:#0b1220; --b:#223050;
-      --txt:#e8eefc; --muted:#a9b7d6; --accent:#2e6bff; --accent2:#1b2740; --danger:#d84b4b;
-      --ok:#2ecc71;
+      --txt:#e8eefc; --muted:#a9b7d6; --accent:#2e6bff; --accent2:#1b2740; --danger:#d84b4b; --ok:#2ecc71;
     }
     *{box-sizing:border-box}
     body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:var(--bg);color:var(--txt)}
-    .wrap{max-width:1040px;margin:0 auto;padding:18px}
+    .wrap{max-width:820px;margin:0 auto;padding:18px}
     .card{background:var(--card);border:1px solid var(--b);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
     h1{font-size:20px;margin:0 0 10px}
     .muted{color:var(--muted);font-size:14px;line-height:1.35}
     .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
     input, select{
-      flex:1;min-width:170px;background:var(--card2);border:1px solid var(--b);color:var(--txt);
+      flex:1;min-width:180px;background:var(--card2);border:1px solid var(--b);color:var(--txt);
       border-radius:12px;padding:12px;font-size:16px
     }
     button{background:var(--accent);border:0;color:white;border-radius:12px;padding:12px 14px;font-size:16px;cursor:pointer}
@@ -28,412 +27,398 @@
     .hr{height:1px;background:var(--b);margin:14px 0}
     .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--accent2);border:1px solid var(--b);font-size:13px;color:#cfe0ff}
     .big{font-size:22px;font-weight:700;margin:10px 0}
-    .twoCol{display:grid;grid-template-columns:1fr;gap:10px}
-    @media(min-width:900px){ .twoCol{grid-template-columns:1.1fr .9fr} }
     .box{background:var(--card2);border:1px solid var(--b);border-radius:14px;padding:12px}
-    .reveal{font-size:18px;line-height:1.4;white-space:pre-wrap;background:var(--card2);border:1px solid var(--b);border-radius:14px;padding:14px;margin-top:12px}
+    .codeBox{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:22px; letter-spacing:1px;
+      background:#070c15;border:1px solid var(--b); border-radius:14px;
+      padding:14px; margin-top:10px; word-break:break-all;
+    }
+    .reveal{
+      font-size:18px;line-height:1.4;white-space:pre-wrap;
+      background:#070c15;border:1px solid var(--b);border-radius:14px;
+      padding:14px;margin-top:12px
+    }
     .hint{font-size:12px;color:var(--muted);margin-top:6px}
     .warn{color:#ffd6a6}
-    code{background:var(--card2);border:1px solid var(--b);border-radius:10px;padding:2px 6px}
-    ul{margin:8px 0 0 18px}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>Impostor — Sala + Ronda (sin reenviar links)</h1>
-      <div class="muted">
-        Enviad este link <b>una vez</b>. Luego, para cada ronda, el anfitrión solo dice:
-        <b>Sala</b> + <b>Ronda</b>. Cada móvil calcula su carta.
+<div class="wrap">
+  <div class="card">
+    <h1>Impostor — Código de ronda (simple)</h1>
+    <div class="muted">
+      <b>Enlace solo una vez</b>. Luego cada ronda el anfitrión comparte un <b>código</b>.
+      Si todos tenéis el mismo <b>Sala + Ronda + Clave</b> y el mismo <b>Tema</b>, estáis sincronizados.
+    </div>
+
+    <!-- LANDING -->
+    <div id="screenLanding">
+      <div class="row">
+        <button class="ok" id="goHost">Soy anfitrión</button>
+        <button class="secondary" id="goPlayer">Soy jugador</button>
       </div>
+      <div class="hint warn">
+        Sin servidor no hay forma de evitar que alguien cambie su slot para curiosear.
+      </div>
+    </div>
 
-      <div class="twoCol">
-        <!-- HOST -->
-        <div class="box" id="hostBox">
-          <div class="big" style="margin-top:0;">Anfitrión</div>
+    <!-- HOST -->
+    <div id="screenHost" style="display:none;">
+      <div class="big">Anfitrión</div>
 
-          <div class="row">
-            <input id="roomHost" placeholder="Sala (ej: FAMILIA2026)" />
-            <input id="roundHost" type="number" min="1" value="1" />
-          </div>
+      <div class="box">
+        <div class="muted">Ajustes de la partida (ponlos una vez y no los cambies):</div>
 
-          <div class="row">
-            <input id="playersHost" type="number" min="3" value="6" title="Jugadores" />
-            <input id="impostorsHost" type="number" min="1" value="1" title="Impostores" />
-          </div>
-
-          <div class="row">
-            <select id="topicModeHost">
-              <option value="random">Tema aleatorio</option>
-              <option value="choose">Elegir tema</option>
-            </select>
-            <select id="topicSelectHost" style="display:none;"></select>
-          </div>
-
-          <div class="row">
-            <button id="hostCompute" class="ok">Actualizar ronda (mostrar tema)</button>
-            <button id="hostNext">Siguiente ronda (+1)</button>
-            <button id="hostReset" class="danger">Reset</button>
-          </div>
-
-          <div class="hint warn">
-            El anfitrión <b>no verá la palabra</b> (solo el tema). Para sincronizar, enseña/di el número de ronda.
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="muted">Anuncio para decir en voz alta:</div>
-          <div class="reveal" id="hostAnnounce">—</div>
-
-          <div class="hr"></div>
-
-          <div class="muted">Tema (solo para guiar la partida):</div>
-          <div class="reveal" id="hostTheme">—</div>
-
-          <div class="hint">
-            Nota: sin servidor no se puede impedir que alguien cambie de “slot” para curiosear.
-          </div>
+        <div class="row">
+          <input id="hRoom" placeholder="Sala (ej: FAMILIA)" />
+          <input id="hPlayers" type="number" min="3" value="6" />
+          <input id="hImpostors" type="number" min="1" value="1" />
         </div>
 
-        <!-- PLAYER -->
-        <div class="box" id="playerBox">
-          <div class="big" style="margin-top:0;">Jugador</div>
+        <div class="row">
+          <select id="hTopicMode">
+            <option value="random">Tema aleatorio</option>
+            <option value="choose">Tema fijo (elegir)</option>
+          </select>
+          <select id="hTopicSelect" style="display:none;"></select>
+        </div>
 
-          <div class="row">
-            <input id="roomPlayer" placeholder="Sala (igual que anfitrión)" />
-            <input id="roundPlayer" type="number" min="1" value="1" />
-          </div>
+        <div class="row">
+          <button class="ok" id="hStart">Crear partida</button>
+          <button class="secondary" id="hNext" disabled>Nueva ronda</button>
+          <button class="danger" id="hReset">Reset</button>
+        </div>
 
-          <div class="row">
-            <input id="namePlayer" placeholder="Tu nombre (opcional)" />
-            <input id="slotPlayer" type="number" min="1" value="1" title="Tu slot" />
-          </div>
-
-          <div class="row">
-            <button id="playerSync" class="ok">Actualizar mi carta</button>
-            <button id="playerHide" class="secondary" style="display:none;">Ocultar</button>
-          </div>
-
-          <div class="hint">
-            Consejo: Elegid slots fijos (1..N) al inicio y no los cambiéis.
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="row" style="justify-content:space-between">
-            <span class="pill" id="pvTheme">Tema: —</span>
-            <span class="pill" id="pvMe">Slot: —</span>
-          </div>
-
-          <div class="reveal" id="playerCard" style="display:none;">—</div>
-
-          <div class="hr"></div>
-
-          <div class="muted"><b>Reglas rápidas</b></div>
-          <ul class="muted">
-            <li>Normales: ven tema + palabra.</li>
-            <li>Impostor(es): ven solo tema.</li>
-            <li>1–2 vueltas de pistas, debate corto, votación.</li>
-          </ul>
+        <div class="hint">
+          El anfitrión <b>NO verá la palabra</b>. Solo verá el <b>tema</b> para guiar.
         </div>
       </div>
 
       <div class="hr"></div>
 
-      <div class="muted">
-        <b>Personalización:</b> edita <code>DATA</code> más abajo.
+      <div class="box">
+        <div class="muted">CÓDIGO DE RONDA (compártelo en el grupo):</div>
+        <div class="codeBox" id="hCode">—</div>
+
+        <div class="row">
+          <button class="secondary" id="hCopy" disabled>Copiar código</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row" style="justify-content:space-between">
+          <span class="pill" id="hSync">Sala: — · Ronda: — · Clave: —</span>
+          <span class="pill" id="hTheme">Tema: —</span>
+        </div>
+
+        <div class="hint">
+          Para sincronizar: todos los jugadores pegan el <b>código</b>, eligen su <b>slot</b> y le dan a “Ver mi carta”.
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="secondary" id="backFromHost">Volver</button>
       </div>
     </div>
+
+    <!-- PLAYER -->
+    <div id="screenPlayer" style="display:none;">
+      <div class="big">Jugador</div>
+
+      <div class="box">
+        <div class="muted">Pega el código que manda el anfitrión:</div>
+        <div class="row">
+          <input id="pCode" placeholder="Ej: FAMILIA-3-K7Q2-6-1-R" />
+        </div>
+
+        <div class="row">
+          <input id="pName" placeholder="Tu nombre (opcional)" />
+          <input id="pSlot" type="number" min="1" value="1" />
+        </div>
+
+        <div class="row">
+          <button class="ok" id="pShow">Ver mi carta</button>
+          <button class="secondary" id="pHide" style="display:none;">Ocultar</button>
+        </div>
+
+        <div class="hint">
+          Elegid slots fijos 1..N (uno por persona). Ej: Aita=1, Ama=2, etc.
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="box">
+        <div class="row" style="justify-content:space-between">
+          <span class="pill" id="pSync">Sala: — · Ronda: — · Clave: —</span>
+          <span class="pill" id="pTheme">Tema: —</span>
+        </div>
+
+        <div class="reveal" id="pCard" style="display:none;">—</div>
+      </div>
+
+      <div class="row">
+        <button class="secondary" id="backFromPlayer">Volver</button>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+    <div class="muted"><b>Listas:</b> puedes editar DATA en el código si quieres.</div>
   </div>
+</div>
 
 <script>
 /*** =========================
- *  TEMAS + LISTAS
+ *  LISTAS (DATA)
  *  ========================= */
 const DATA = {
-  "Países": [
-    "España","Portugal","Francia","Italia","Alemania","Reino Unido","Irlanda","Grecia","Turquía","Marruecos",
-    "Egipto","Israel","India","China","Japón","Corea del Sur","Australia","Estados Unidos","Canadá","México"
-  ],
-  "Animales": [
-    "Perro","Gato","Caballo","Vaca","Oveja","Cerdo","Conejo","Elefante","Tigre","León",
-    "Jirafa","Cebra","Oso panda","Koala","Lobo","Delfín","Tiburón","Pingüino","Águila","Serpiente"
-  ],
-  "Famosos (muy conocidos)": [
-    "Lionel Messi","Cristiano Ronaldo","Arnold Schwarzenegger","Will Smith","Tom Cruise","Leonardo DiCaprio","Brad Pitt","Johnny Depp","Dwayne Johnson","Keanu Reeves",
-    "Justin Bieber","Taylor Swift","Shakira","Beyoncé","Rihanna","Adele","Ed Sheeran","Bad Bunny","Drake","Eminem",
-    "Rafa Nadal","Carlos Alcaraz","Michael Jordan","LeBron James","Kim Kardashian","Elon Musk","Bill Gates","Mark Zuckerberg","Jeff Bezos","Oprah Winfrey"
-  ],
-  "Políticos y líderes (muy conocidos)": [
-    "Donald Trump","Joe Biden","Barack Obama","Vladimir Putin","Xi Jinping","Volodímir Zelenski","Nicolás Maduro","Javier Milei",
-    "Pedro Sánchez","Mariano Rajoy","Santiago Abascal","Arnaldo Otegi","Felipe VI","Juan Carlos I",
-    "Emmanuel Macron","Giorgia Meloni","Ursula von der Leyen","Justin Trudeau","Angela Merkel"
-  ],
-  "Figuras históricas (muy conocidas)": [
-    "Albert Einstein","Napoleón Bonaparte","Wolfgang Amadeus Mozart","Miguel de Cervantes","Mahatma Gandhi",
-    "Isaac Newton","Leonardo da Vinci","Julio César","Alejandro Magno","Cleopatra",
-    "Cristóbal Colón","Simón Bolívar","Martin Luther King Jr.","Nelson Mandela","Winston Churchill",
-    "Adolf Hitler","Joseph Stalin","Beethoven","William Shakespeare","Marie Curie"
-  ],
-  "Profesiones": [
-    "Médico","Enfermero","Profesor","Ingeniero","Arquitecto","Abogado","Juez","Policía","Bombero","Piloto",
-    "Cocinero","Camarero","Mecánico","Electricista","Fontanero","Carpintero","Periodista","Fotógrafo","Veterinario","Programador"
-  ],
-  "Comidas y Bebidas": [
-    "Paella","Tortilla de patatas","Gazpacho","Croquetas","Jamón ibérico","Pizza","Hamburguesa","Sushi","Ramen","Tacos",
-    "Burrito","Kebab","Pasta carbonara","Curry","Ceviche","Café","Té","Zumo de naranja","Cerveza","Vino"
-  ],
-  "Lugares comunes": [
-    "Playa","Montaña","Parque","Bosque","Río","Lago","Centro comercial","Supermercado","Aeropuerto","Estación de tren",
-    "Hospital","Colegio","Universidad","Biblioteca","Museo","Cine","Restaurante","Bar","Gimnasio","Hotel"
-  ],
-  "Edificios y monumentos (muy conocidos)": [
-    "Torre Eiffel","Coliseo de Roma","Sagrada Familia","Alhambra","Big Ben","Taj Mahal","Estatua de la Libertad","Gran Muralla China","Pirámides de Giza","Machu Picchu",
-    "Ópera de Sídney","Burj Khalifa","Kremlin","Basílica de San Pedro","Notre Dame","Palacio de Versalles","Torre de Pisa","Puerta de Brandeburgo","Stonehenge","Mezquita-Catedral de Córdoba"
-  ],
-  "Objetos comunes": [
-    "Móvil","Cargador","Auriculares","Portátil","Teclado","Ratón","Televisor","Mando a distancia","Altavoz","Reloj",
-    "Llaves","Cartera","Mochila","Botella de agua","Vaso","Taza","Plato","Cuchillo","Tenedor","Cuchara"
-  ],
-  "Conocidos (privado)": [
-    "Loren","Aita","Ama","Nerea","Ainhoa","Javi","Juan","Isabel","Miguel","Nelson",
-    "Ernesto","Ane","Judit","Amona","Amoñi","Mamen","Fugas","Txiki","La atia"
-  ]
+  "Países": ["España","Portugal","Francia","Italia","Alemania","Reino Unido","Irlanda","Grecia","Turquía","Marruecos","Egipto","Israel","India","China","Japón","Corea del Sur","Australia","Estados Unidos","Canadá","México"],
+  "Animales": ["Perro","Gato","Caballo","Vaca","Oveja","Cerdo","Conejo","Elefante","Tigre","León","Jirafa","Cebra","Oso panda","Koala","Lobo","Delfín","Tiburón","Pingüino","Águila","Serpiente"],
+  "Famosos (muy conocidos)": ["Lionel Messi","Cristiano Ronaldo","Arnold Schwarzenegger","Will Smith","Tom Cruise","Leonardo DiCaprio","Brad Pitt","Johnny Depp","Dwayne Johnson","Keanu Reeves","Justin Bieber","Taylor Swift","Shakira","Beyoncé","Rihanna","Adele","Ed Sheeran","Bad Bunny","Drake","Eminem","Rafa Nadal","Carlos Alcaraz","Michael Jordan","LeBron James","Kim Kardashian","Elon Musk","Bill Gates","Mark Zuckerberg","Jeff Bezos","Oprah Winfrey"],
+  "Políticos y líderes (muy conocidos)": ["Donald Trump","Joe Biden","Barack Obama","Vladimir Putin","Xi Jinping","Volodímir Zelenski","Nicolás Maduro","Javier Milei","Pedro Sánchez","Mariano Rajoy","Santiago Abascal","Arnaldo Otegi","Felipe VI","Juan Carlos I","Emmanuel Macron","Giorgia Meloni","Ursula von der Leyen","Justin Trudeau","Angela Merkel"],
+  "Figuras históricas (muy conocidas)": ["Albert Einstein","Napoleón Bonaparte","Wolfgang Amadeus Mozart","Miguel de Cervantes","Mahatma Gandhi","Isaac Newton","Leonardo da Vinci","Julio César","Alejandro Magno","Cleopatra","Cristóbal Colón","Simón Bolívar","Martin Luther King Jr.","Nelson Mandela","Winston Churchill","Adolf Hitler","Joseph Stalin","Beethoven","William Shakespeare","Marie Curie"],
+  "Profesiones": ["Médico","Enfermero","Profesor","Ingeniero","Arquitecto","Abogado","Juez","Policía","Bombero","Piloto","Cocinero","Camarero","Mecánico","Electricista","Fontanero","Carpintero","Periodista","Fotógrafo","Veterinario","Programador"],
+  "Comidas y Bebidas": ["Paella","Tortilla de patatas","Gazpacho","Croquetas","Jamón ibérico","Pizza","Hamburguesa","Sushi","Ramen","Tacos","Burrito","Kebab","Pasta carbonara","Curry","Ceviche","Café","Té","Zumo de naranja","Cerveza","Vino"],
+  "Lugares comunes": ["Playa","Montaña","Parque","Bosque","Río","Lago","Centro comercial","Supermercado","Aeropuerto","Estación de tren","Hospital","Colegio","Universidad","Biblioteca","Museo","Cine","Restaurante","Bar","Gimnasio","Hotel"],
+  "Edificios y monumentos (muy conocidos)": ["Torre Eiffel","Coliseo de Roma","Sagrada Familia","Alhambra","Big Ben","Taj Mahal","Estatua de la Libertad","Gran Muralla China","Pirámides de Giza","Machu Picchu","Ópera de Sídney","Burj Khalifa","Kremlin","Basílica de San Pedro","Notre Dame","Palacio de Versalles","Torre de Pisa","Puerta de Brandeburgo","Stonehenge","Mezquita-Catedral de Córdoba"],
+  "Objetos comunes": ["Móvil","Cargador","Auriculares","Portátil","Teclado","Ratón","Televisor","Mando a distancia","Altavoz","Reloj","Llaves","Cartera","Mochila","Botella de agua","Vaso","Taza","Plato","Cuchillo","Tenedor","Cuchara"],
+  "Conocidos (privado)": ["Loren","Aita","Ama","Nerea","Ainhoa","Javi","Juan","Isabel","Miguel","Nelson","Ernesto","Ane","Judit","Amona","Amoñi","Mamen","Fugas","Txiki","La atia"]
 };
+const TOPICS = Object.keys(DATA);
 
 /*** =========================
- *  RNG con semilla (determinista)
+ *  RNG determinista (seed)
  *  ========================= */
-// hash -> 128-bit seed (cyrb128) + PRNG (sfc32)
 function cyrb128(str) {
-  let h1 = 1779033703, h2 = 3144134277, h3 = 1013904242, h4 = 2773480762;
-  for (let i = 0, k; i < str.length; i++) {
-    k = str.charCodeAt(i);
-    h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
-    h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
-    h3 = h4 ^ Math.imul(h3 ^ k, 951274213);
-    h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+  let h1=1779033703, h2=3144134277, h3=1013904242, h4=2773480762;
+  for (let i=0,k;i<str.length;i++) {
+    k=str.charCodeAt(i);
+    h1=h2^Math.imul(h1^k,597399067);
+    h2=h3^Math.imul(h2^k,2869860233);
+    h3=h4^Math.imul(h3^k,951274213);
+    h4=h1^Math.imul(h4^k,2716044179);
   }
-  h1 = Math.imul(h3 ^ (h1 >>> 18), 597399067);
-  h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
-  h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213);
-  h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
-  return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
+  h1=Math.imul(h3^(h1>>>18),597399067);
+  h2=Math.imul(h4^(h2>>>22),2869860233);
+  h3=Math.imul(h1^(h3>>>17),951274213);
+  h4=Math.imul(h2^(h4>>>19),2716044179);
+  return [(h1^h2^h3^h4)>>>0,(h2^h1)>>>0,(h3^h1)>>>0,(h4^h1)>>>0];
 }
-function sfc32(a, b, c, d) {
-  return function() {
-    a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
-    let t = (a + b) | 0;
-    a = b ^ (b >>> 9);
-    b = (c + (c << 3)) | 0;
-    c = (c << 21) | (c >>> 11);
-    d = (d + 1) | 0;
-    t = (t + d) | 0;
-    c = (c + t) | 0;
-    return (t >>> 0) / 4294967296;
-  }
-}
-function makeRng(seedStr){
-  const s = cyrb128(seedStr);
-  return sfc32(s[0], s[1], s[2], s[3]);
-}
-function randInt(rng, n){ return Math.floor(rng()*n); }
-function pick(rng, arr){ return arr[randInt(rng, arr.length)]; }
+function sfc32(a,b,c,d){ return function(){ a>>>=0;b>>>=0;c>>>=0;d>>>=0;
+  let t=(a+b)|0; a=b^(b>>>9); b=(c+(c<<3))|0; c=(c<<21)|(c>>>11); d=(d+1)|0;
+  t=(t+d)|0; c=(c+t)|0; return (t>>>0)/4294967296; }; }
+function rngFrom(seedStr){ const s=cyrb128(seedStr); return sfc32(s[0],s[1],s[2],s[3]); }
+function randInt(rng,n){ return Math.floor(rng()*n); }
+function pick(rng,arr){ return arr[randInt(rng,arr.length)]; }
 
-function clampImpostors(nPlayers, k){
-  k = Math.max(1, Math.floor(k));
-  return Math.min(k, nPlayers - 1);
-}
-function sampleImpostors(rng, nPlayers, k){
-  const set = new Set();
-  while(set.size < k){
-    set.add(randInt(rng, nPlayers) + 1); // 1..n
-  }
+function clampImpostors(n,k){ k=Math.max(1,Math.floor(k)); return Math.min(k,n-1); }
+function sampleImpostors(rng,n,k){
+  const set=new Set();
+  while(set.size<k){ set.add(randInt(rng,n)+1); }
   return set;
 }
 
 /*** =========================
- *  UI init
- *  ========================= */
-function keys(obj){ return Object.keys(obj); }
-
-function fillTopicSelect(){
-  const sel = document.getElementById("topicSelectHost");
-  sel.innerHTML = "";
-  keys(DATA).forEach(k=>{
-    const opt = document.createElement("option");
-    opt.value = k; opt.textContent = k;
-    sel.appendChild(opt);
-  });
+ *  Código de ronda
+ *  =========================
+ * Formato: ROOM-ROUND-KEY-N-K-T
+ *  - ROOM: texto sin guiones (se normaliza)
+ *  - ROUND: número
+ *  - KEY: 4 chars (aleatorio por ronda)
+ *  - N: jugadores
+ *  - K: impostores
+ *  - T: R (tema random) o C (tema fijo) + índice (si fijo) -> ej: C3
+ */
+function normalizeRoom(s){
+  return (s||"").trim().toUpperCase().replace(/\s+/g,"").replace(/[^A-Z0-9]/g,"");
 }
-fillTopicSelect();
-
-document.getElementById("topicModeHost").addEventListener("change", (e)=>{
-  document.getElementById("topicSelectHost").style.display = (e.target.value === "choose") ? "block" : "none";
-});
+function makeKey4(){
+  const chars="ABCDEFGHJKMNPQRSTUVWXYZ23456789"; // sin I,O,1,0
+  let out="";
+  for(let i=0;i<4;i++) out+=chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+function packCode({room,round,key,n,k,topicMode,topicIndex}){
+  const ROOM=normalizeRoom(room);
+  const T = (topicMode==="choose") ? `C${topicIndex}` : "R";
+  return `${ROOM}-${round}-${key}-${n}-${k}-${T}`;
+}
+function parseCode(code){
+  const raw=(code||"").trim().toUpperCase();
+  const parts=raw.split("-").filter(Boolean);
+  if(parts.length<6) return null;
+  const [ROOM, ROUND, KEY, N, K, T] = parts;
+  const round = parseInt(ROUND,10);
+  const n = parseInt(N,10);
+  const k = parseInt(K,10);
+  if(!ROOM || !KEY || !Number.isFinite(round) || !Number.isFinite(n) || !Number.isFinite(k)) return null;
+  if(KEY.length!==4) return null;
+  let topicMode="random", topicIndex=0;
+  if(T.startsWith("C")){
+    topicMode="choose";
+    topicIndex=parseInt(T.slice(1),10);
+    if(!Number.isFinite(topicIndex) || topicIndex<0 || topicIndex>=TOPICS.length) return null;
+  }else if(T==="R"){
+    topicMode="random";
+  }else{
+    return null;
+  }
+  return { room:ROOM, round, key:KEY, n, k, topicMode, topicIndex };
+}
 
 /*** =========================
- *  Estado local (para no reescribir siempre)
+ *  Motor de ronda (desde código)
  *  ========================= */
-const LS = {
-  room: "imp_room",
-  roundH: "imp_round_host",
-  playersH: "imp_players_host",
-  impostorsH: "imp_impostors_host",
-  topicModeH: "imp_topic_mode_host",
-  topicSelH: "imp_topic_sel_host",
-  roomP: "imp_room_player",
-  roundP: "imp_round_player",
-  slotP: "imp_slot_player",
-  nameP: "imp_name_player"
+function computeFromCode(parsed){
+  const {room,round,key,n,k,topicMode,topicIndex} = parsed;
+  const K = clampImpostors(n,k);
+  const seedBase = `ROOM=${room}|ROUND=${round}|KEY=${key}|N=${n}|K=${K}|T=${topicMode}|TI=${topicIndex}`;
+  const rng = rngFrom(seedBase);
+
+  const topic = (topicMode==="choose") ? TOPICS[topicIndex] : TOPICS[randInt(rng, TOPICS.length)];
+  const word = pick(rng, DATA[topic]);
+  const impostors = sampleImpostors(rng, n, K);
+  return { topic, word, impostors, n, k:K, room, round, key };
+}
+
+/*** =========================
+ *  UI wiring
+ *  ========================= */
+const S = {
+  landing: document.getElementById("screenLanding"),
+  host: document.getElementById("screenHost"),
+  player: document.getElementById("screenPlayer")
+};
+function showScreen(which){
+  S.landing.style.display = (which==="landing")?"block":"none";
+  S.host.style.display = (which==="host")?"block":"none";
+  S.player.style.display = (which==="player")?"block":"none";
+}
+
+document.getElementById("goHost").onclick = ()=>showScreen("host");
+document.getElementById("goPlayer").onclick = ()=>showScreen("player");
+document.getElementById("backFromHost").onclick = ()=>showScreen("landing");
+document.getElementById("backFromPlayer").onclick = ()=>showScreen("landing");
+
+/*** Host setup */
+const hTopicSelect = document.getElementById("hTopicSelect");
+TOPICS.forEach((t,i)=>{
+  const opt=document.createElement("option");
+  opt.value=String(i);
+  opt.textContent=t;
+  hTopicSelect.appendChild(opt);
+});
+document.getElementById("hTopicMode").addEventListener("change",(e)=>{
+  hTopicSelect.style.display = (e.target.value==="choose") ? "block" : "none";
+});
+
+let currentHost = { started:false, room:"", n:6, k:1, topicMode:"random", topicIndex:0, round:1, key:"" };
+
+function hostRender(){
+  if(!currentHost.started){
+    document.getElementById("hCode").textContent = "—";
+    document.getElementById("hCopy").disabled = true;
+    document.getElementById("hNext").disabled = true;
+    document.getElementById("hSync").textContent = "Sala: — · Ronda: — · Clave: —";
+    document.getElementById("hTheme").textContent = "Tema: —";
+    return;
+  }
+  const code = packCode(currentHost);
+  document.getElementById("hCode").textContent = code;
+  document.getElementById("hCopy").disabled = false;
+  document.getElementById("hNext").disabled = false;
+
+  const out = computeFromCode(parseCode(code));
+  document.getElementById("hSync").textContent = `Sala: ${out.room} · Ronda: ${out.round} · Clave: ${out.key}`;
+  document.getElementById("hTheme").textContent = `Tema: ${out.topic}`;
+}
+
+document.getElementById("hStart").onclick = ()=>{
+  const room = normalizeRoom(document.getElementById("hRoom").value);
+  let n = Math.max(3, parseInt(document.getElementById("hPlayers").value||"6",10));
+  let k = parseInt(document.getElementById("hImpostors").value||"1",10);
+  k = clampImpostors(n,k);
+
+  const topicMode = document.getElementById("hTopicMode").value;
+  const topicIndex = parseInt(document.getElementById("hTopicSelect").value||"0",10);
+
+  if(!room){
+    alert("Pon una sala (ej: FAMILIA).");
+    return;
+  }
+
+  currentHost = {
+    started:true,
+    room, n, k,
+    topicMode,
+    topicIndex: Number.isFinite(topicIndex)?topicIndex:0,
+    round: 1,
+    key: makeKey4()
+  };
+  hostRender();
 };
 
-function loadSaved(){
-  const rh = localStorage.getItem(LS.room) || "";
-  document.getElementById("roomHost").value = rh;
-  document.getElementById("roomPlayer").value = localStorage.getItem(LS.roomP) || rh;
+document.getElementById("hNext").onclick = ()=>{
+  if(!currentHost.started) return;
+  currentHost.round += 1;
+  currentHost.key = makeKey4(); // clave nueva por ronda (evita que se “adivine”)
+  hostRender();
+};
 
-  document.getElementById("roundHost").value = localStorage.getItem(LS.roundH) || "1";
-  document.getElementById("playersHost").value = localStorage.getItem(LS.playersH) || "6";
-  document.getElementById("impostorsHost").value = localStorage.getItem(LS.impostorsH) || "1";
-  document.getElementById("topicModeHost").value = localStorage.getItem(LS.topicModeH) || "random";
-  document.getElementById("topicSelectHost").value = localStorage.getItem(LS.topicSelH) || keys(DATA)[0];
+document.getElementById("hReset").onclick = ()=>{
+  currentHost = { started:false, room:"", n:6, k:1, topicMode:"random", topicIndex:0, round:1, key:"" };
+  hostRender();
+};
 
-  document.getElementById("roundPlayer").value = localStorage.getItem(LS.roundP) || localStorage.getItem(LS.roundH) || "1";
-  document.getElementById("slotPlayer").value = localStorage.getItem(LS.slotP) || "1";
-  document.getElementById("namePlayer").value = localStorage.getItem(LS.nameP) || "";
+document.getElementById("hCopy").onclick = async ()=>{
+  const code = document.getElementById("hCode").textContent;
+  try{
+    await navigator.clipboard.writeText(code);
+    alert("Código copiado. Pégalo en el grupo.");
+  }catch(e){
+    alert("No pude copiar. Selecciona el código y cópialo manualmente.");
+  }
+};
 
-  document.getElementById("topicSelectHost").style.display =
-    (document.getElementById("topicModeHost").value === "choose") ? "block" : "none";
-}
-loadSaved();
-
-function saveHost(){
-  localStorage.setItem(LS.room, document.getElementById("roomHost").value.trim());
-  localStorage.setItem(LS.roundH, String(document.getElementById("roundHost").value));
-  localStorage.setItem(LS.playersH, String(document.getElementById("playersHost").value));
-  localStorage.setItem(LS.impostorsH, String(document.getElementById("impostorsHost").value));
-  localStorage.setItem(LS.topicModeH, document.getElementById("topicModeHost").value);
-  localStorage.setItem(LS.topicSelH, document.getElementById("topicSelectHost").value);
-
-  // Por comodidad, empuja sala al jugador en ESTE dispositivo
-  localStorage.setItem(LS.roomP, document.getElementById("roomHost").value.trim());
-  localStorage.setItem(LS.roundP, String(document.getElementById("roundHost").value));
-}
-function savePlayer(){
-  localStorage.setItem(LS.roomP, document.getElementById("roomPlayer").value.trim());
-  localStorage.setItem(LS.roundP, String(document.getElementById("roundPlayer").value));
-  localStorage.setItem(LS.slotP, String(document.getElementById("slotPlayer").value));
-  localStorage.setItem(LS.nameP, document.getElementById("namePlayer").value.trim());
-}
-
-/*** =========================
- *  Motor de ronda
- *  ========================= */
-function computeRound(params){
-  const { room, round, nPlayers, kImpostors, topicMode, chosenTopic } = params;
-
-  const seedBase = `ROOM=${room}|ROUND=${round}|N=${nPlayers}|K=${kImpostors}|MODE=${topicMode}|TOPIC=${chosenTopic||""}`;
-  const rng = makeRng(seedBase);
-
-  const topics = keys(DATA);
-  const topic = (topicMode === "choose" && chosenTopic) ? chosenTopic : topics[randInt(rng, topics.length)];
-  const word = pick(rng, DATA[topic]);
-
-  const impostors = sampleImpostors(rng, nPlayers, kImpostors);
-
-  return { topic, word, impostors };
-}
-
-/*** =========================
- *  HOST actions
- *  ========================= */
-function hostUpdate(showIncrement=false){
-  const room = document.getElementById("roomHost").value.trim();
-  const round = Math.max(1, parseInt(document.getElementById("roundHost").value || "1", 10));
-  const nPlayers = Math.max(3, parseInt(document.getElementById("playersHost").value || "6", 10));
-  let k = parseInt(document.getElementById("impostorsHost").value || "1", 10);
-  k = clampImpostors(nPlayers, k);
-  document.getElementById("impostorsHost").value = String(k);
-
-  const topicMode = document.getElementById("topicModeHost").value;
-  const chosenTopic = document.getElementById("topicSelectHost").value;
-
-  if(!room){
-    document.getElementById("hostAnnounce").textContent = "Pon una Sala (ej: FAMILIA2026).";
-    document.getElementById("hostTheme").textContent = "—";
+/*** Player */
+document.getElementById("pShow").onclick = ()=>{
+  const code = document.getElementById("pCode").value.trim();
+  const parsed = parseCode(code);
+  if(!parsed){
+    alert("Código inválido. Debe ser tipo: FAMILIA-3-K7Q2-6-2-R (o ...-C5)");
+    return;
+  }
+  const slot = Math.max(1, parseInt(document.getElementById("pSlot").value||"1",10));
+  if(slot > parsed.n){
+    alert(`Tu slot debe estar entre 1 y ${parsed.n}.`);
     return;
   }
 
-  const out = computeRound({ room, round, nPlayers, kImpostors: k, topicMode, chosenTopic });
-
-  // Host NO ve palabra: solo tema y anuncio
-  document.getElementById("hostAnnounce").textContent =
-    `Sala: ${room}\nRonda: ${round}\nJugadores: ${nPlayers}\nImpostores: ${k}\n\n(Di/enseña “Sala ${room}, ronda ${round}”)`;
-
-  document.getElementById("hostTheme").textContent = `Tema: ${out.topic}\n\n(La palabra NO se muestra al anfitrión)`;
-
-  saveHost();
-}
-
-document.getElementById("hostCompute").addEventListener("click", ()=>hostUpdate());
-document.getElementById("hostNext").addEventListener("click", ()=>{
-  const r = Math.max(1, parseInt(document.getElementById("roundHost").value || "1", 10)) + 1;
-  document.getElementById("roundHost").value = String(r);
-  hostUpdate();
-});
-document.getElementById("hostReset").addEventListener("click", ()=>{
-  document.getElementById("roundHost").value = "1";
-  hostUpdate();
-});
-
-/*** =========================
- *  PLAYER actions
- *  ========================= */
-function playerUpdate(){
-  const room = document.getElementById("roomPlayer").value.trim();
-  const round = Math.max(1, parseInt(document.getElementById("roundPlayer").value || "1", 10));
-  const slot = Math.max(1, parseInt(document.getElementById("slotPlayer").value || "1", 10));
-  const name = document.getElementById("namePlayer").value.trim();
-
-  // Los parámetros de la sala (N, K, topicMode, topicSel) deben coincidir con el anfitrión
-  // Para simplificar: el jugador los “toma” de lo guardado por el anfitrión SOLO si existe en su dispositivo.
-  // En dispositivos distintos: el anfitrión lo dice una vez al inicio (N y K) y se fija.
-  const nPlayers = Math.max(3, parseInt(localStorage.getItem(LS.playersH) || "6", 10));
-  const k = clampImpostors(nPlayers, parseInt(localStorage.getItem(LS.impostorsH) || "1", 10));
-  const topicMode = localStorage.getItem(LS.topicModeH) || "random";
-  const chosenTopic = localStorage.getItem(LS.topicSelH) || keys(DATA)[0];
-
-  if(!room){
-    alert("Escribe la Sala (igual que la del anfitrión).");
-    return;
-  }
-
-  const out = computeRound({ room, round, nPlayers, kImpostors: k, topicMode, chosenTopic });
-
+  const out = computeFromCode(parsed);
   const isImp = out.impostors.has(slot);
+  const name = (document.getElementById("pName").value||"").trim();
 
-  document.getElementById("pvTheme").textContent = `Tema: ${out.topic}`;
-  document.getElementById("pvMe").textContent = name ? `Slot ${slot} (${name})` : `Slot ${slot}`;
+  document.getElementById("pSync").textContent = `Sala: ${out.room} · Ronda: ${out.round} · Clave: ${out.key}`;
+  document.getElementById("pTheme").textContent = `Tema: ${out.topic}`;
 
-  const card = document.getElementById("playerCard");
+  const card = document.getElementById("pCard");
   card.style.display = "block";
   card.textContent = isImp
-    ? `Eres el IMPOSTOR 😈\nTema: ${out.topic}\nPalabra: (no la sabes)`
-    : `No eres impostor ✅\nTema: ${out.topic}\nPalabra: ${out.word}`;
+    ? `Eres el IMPOSTOR 😈\nTema: ${out.topic}\nPalabra: (no la sabes)\n\nSlot: ${slot}${name?` (${name})`:""}`
+    : `No eres impostor ✅\nTema: ${out.topic}\nPalabra: ${out.word}\n\nSlot: ${slot}${name?` (${name})`:""}`;
 
-  document.getElementById("playerHide").style.display = "inline-block";
-  savePlayer();
-}
+  document.getElementById("pHide").style.display = "inline-block";
+};
 
-document.getElementById("playerSync").addEventListener("click", playerUpdate);
-document.getElementById("playerHide").addEventListener("click", ()=>{
-  document.getElementById("playerCard").style.display = "none";
-  document.getElementById("playerHide").style.display = "none";
-});
+document.getElementById("pHide").onclick = ()=>{
+  document.getElementById("pCard").style.display = "none";
+  document.getElementById("pHide").style.display = "none";
+};
 
-// Primer render host
-hostUpdate();
+// start
+showScreen("landing");
+hostRender();
 </script>
 </body>
 </html>
