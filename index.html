@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Impostor por enlaces (tema sí, palabra no)</title>
+  <style>
+    :root{
+      --bg:#0b0f17; --card:#121a2a; --card2:#0b1220; --b:#223050;
+      --txt:#e8eefc; --muted:#a9b7d6; --accent:#2e6bff; --accent2:#1b2740; --danger:#d84b4b;
+    }
+    *{box-sizing:border-box}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:var(--bg);color:var(--txt)}
+    .wrap{max-width:980px;margin:0 auto;padding:18px}
+    .card{background:var(--card);border:1px solid var(--b);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    h1{font-size:20px;margin:0 0 10px}
+    .muted{color:var(--muted);font-size:14px;line-height:1.35}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+    input, select{
+      flex:1;min-width:170px;background:var(--card2);border:1px solid var(--b);color:var(--txt);
+      border-radius:12px;padding:12px;font-size:16px
+    }
+    button{background:var(--accent);border:0;color:white;border-radius:12px;padding:12px 14px;font-size:16px;cursor:pointer}
+    button.secondary{background:var(--accent2)}
+    button.danger{background:var(--danger)}
+    .hr{height:1px;background:var(--b);margin:14px 0}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--accent2);border:1px solid var(--b);font-size:13px;color:#cfe0ff}
+    .links{margin-top:12px}
+    .linkrow{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+      margin:10px 0;padding:10px;background:var(--card2);border:1px solid var(--b);border-radius:14px
+    }
+    .linkrow b{min-width:96px}
+    .linkrow a{color:#9fc1ff;word-break:break-all}
+    .reveal{font-size:18px;line-height:1.4;white-space:pre-wrap;background:var(--card2);border:1px solid var(--b);border-radius:14px;padding:14px;margin-top:12px}
+    .big{font-size:22px;font-weight:700;margin:10px 0}
+    .small{font-size:13px;color:var(--muted)}
+    code{background:var(--card2);border:1px solid var(--b);border-radius:10px;padding:2px 6px}
+    .twoCol{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:860px){ .twoCol{grid-template-columns:1.1fr .9fr} }
+    .box{background:var(--card2);border:1px solid var(--b);border-radius:14px;padding:12px}
+    ul{margin:8px 0 0 18px}
+    .hint{font-size:12px;color:var(--muted);margin-top:6px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Impostor por enlaces (cada uno en su móvil)</h1>
+
+      <div id="hostView">
+        <div class="twoCol">
+          <div class="box">
+            <div class="muted">
+              Genera una ronda y envía a cada jugador su <b>enlace privado</b> (WhatsApp/Telegram).
+              El/los impostores verán <b>solo el tema</b>; el resto verá <b>tema + palabra</b>.
+            </div>
+
+            <div class="row">
+              <input id="players" type="number" min="3" value="6" />
+              <input id="impostors" type="number" min="1" value="1" />
+              <select id="topicMode">
+                <option value="random">Tema aleatorio</option>
+                <option value="choose">Elegir tema</option>
+              </select>
+              <select id="topicSelect" style="display:none;"></select>
+            </div>
+            <div class="hint">
+              <b>Jugadores</b> (mín 3) · <b>Impostores</b> (mín 1). Recomendación: 1 impostor hasta 6–7 jugadores, 2 a partir de 8–10.
+            </div>
+
+            <div class="row">
+              <button id="newRound">Generar ronda</button>
+              <button id="copyAll" class="secondary" style="display:none;">Copiar todos los enlaces</button>
+              <button id="reset" class="danger">Reset</button>
+            </div>
+
+            <div class="hr"></div>
+
+            <div id="summary" class="muted">Aún no hay ronda.</div>
+            <div id="links" class="links" style="display:none;"></div>
+
+            <div class="hr"></div>
+
+            <div class="muted">
+              <b>Personalización:</b> edita el objeto <code>DATA</code> dentro de este archivo (<code>index.html</code>).
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="big" style="margin-top:0">Reglas rápidas</div>
+            <ul class="muted">
+              <li><b>Normales</b>: ven tema + palabra.</li>
+              <li><b>Impostor(es)</b>: ven solo tema.</li>
+              <li>1–2 vueltas: cada uno da una pista (sin decir la palabra).</li>
+              <li>Debate corto y votación.</li>
+              <li>(Opcional) si pillan al impostor, puede intentar adivinar la palabra.</li>
+            </ul>
+            <div class="hr"></div>
+            <div class="small">
+              Nota: estos enlaces contienen el rol de cada jugador. No los reenvíes si no queréis spoilers.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="playerView" style="display:none;">
+        <div class="muted">Este enlace es tu rol. No lo reenvíes si no quieres spoilers.</div>
+        <div class="row" style="justify-content:space-between">
+          <span class="pill" id="pvTheme"></span>
+          <span class="pill" id="pvWho"></span>
+        </div>
+        <div class="big" id="pvTitle">Tu rol</div>
+        <div class="row">
+          <button id="pvRevealBtn">Revelar</button>
+          <button id="pvHideBtn" class="secondary" style="display:none;">Ocultar</button>
+        </div>
+        <div id="pvBox" class="reveal" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/*** =========================
+ *  EDITA AQUÍ: TEMAS + LISTAS
+ *  ========================= */
+const DATA = {
+  "Países": [
+    "España","Portugal","Francia","Italia","Alemania","Reino Unido","Irlanda","Países Bajos","Bélgica","Suiza",
+    "Suecia","Noruega","Dinamarca","Finlandia","Islandia","Polonia","Grecia","Turquía","Marruecos","Argentina",
+    "Egipto","India","China","Japón","Corea del Sur","Australia","Estados Unidos","Canadá","México","Brasil"
+  ],
+
+  "Animales": [
+    "Perro","Gato","Caballo","Vaca","Oveja","Cabra","Cerdo","Conejo","Elefante","Tigre",
+    "León","Jirafa","Cebra","Hipopótamo","Rinoceronte","Oso panda","Koala","Lobo","Delfín","Tiburón"
+  ],
+
+  "Famosos (muy conocidos)": [
+    "Lionel Messi","Cristiano Ronaldo","Arnold Schwarzenegger","Will Smith","Tom Cruise","Leonardo DiCaprio","Brad Pitt","Johnny Depp","Dwayne Johnson","Keanu Reeves",
+    "Justin Bieber","Taylor Swift","Shakira","Beyoncé","Rihanna","Adele","Ed Sheeran","Bad Bunny","Drake","Eminem",
+    "Rafa Nadal","Carlos Alcaraz","Michael Jordan","LeBron James","Kim Kardashian","Elon Musk","Bill Gates","Mark Zuckerberg","Jeff Bezos","Oprah Winfrey"
+  ],
+
+  "Políticos y líderes (muy conocidos)": [
+    "Donald Trump","Joe Biden","Barack Obama","Vladimir Putin","Xi Jinping","Volodímir Zelenski","Nicolás Maduro","Javier Milei",
+    "Pedro Sánchez","Mariano Rajoy","Santiago Abascal","Arnaldo Otegi","Felipe VI","Juan Carlos I",
+    "Emmanuel Macron","Giorgia Meloni","Ursula von der Leyen","Justin Trudeau","Angela Merkel"
+  ],
+
+  "Figuras históricas (muy conocidas)": [
+    "Albert Einstein","Napoleón Bonaparte","Wolfgang Amadeus Mozart","Miguel de Cervantes","Mahatma Gandhi",
+    "Isaac Newton","Leonardo da Vinci","Julio César","Alejandro Magno","Cleopatra",
+    "Cristóbal Colón","Simón Bolívar","Martin Luther King Jr.","Nelson Mandela","Winston Churchill",
+    "Adolf Hitler","Joseph Stalin","Beethoven","William Shakespeare","Marie Curie"
+  ],
+
+  "Profesiones": [
+    "Médico","Enfermero","Profesor","Ingeniero","Arquitecto","Abogado","Juez","Policía","Bombero","Piloto",
+    "Cocinero","Camarero","Mecánico","Electricista","Fontanero","Carpintero","Periodista","Fotógrafo","Veterinario","Programador"
+  ],
+
+  "Comidas y Bebidas": [
+    "Paella","Tortilla de patatas","Gazpacho","Croquetas","Jamón ibérico","Pizza","Hamburguesa","Sushi","Ramen","Tacos",
+    "Burrito","Kebab","Pasta carbonara","Curry","Ceviche","Café","Té","Zumo de naranja","Cerveza","Vino"
+  ],
+
+  "Lugares comunes": [
+    "Playa","Montaña","Parque","Bosque","Río","Lago","Centro comercial","Supermercado","Aeropuerto","Estación de tren",
+    "Hospital","Colegio","Universidad","Biblioteca","Museo","Cine","Restaurante","Bar","Gimnasio","Hotel"
+  ],
+
+  "Edificios y monumentos famosos (muy conocidos)": [
+    "Torre Eiffel","Coliseo de Roma","Sagrada Familia","Alhambra","Big Ben","Taj Mahal","Estatua de la Libertad","Gran Muralla China","Pirámides de Giza","Machu Picchu",
+    "Ópera de Sídney","Burj Khalifa","Kremlin","Basílica de San Pedro","Notre Dame","Palacio de Versalles","Torre de Pisa","Puerta de Brandeburgo","Stonehenge","Mezquita-Catedral de Córdoba"
+  ],
+
+  "Objetos comunes": [
+    "Móvil","Cargador","Auriculares","Portátil","Teclado","Ratón","Televisor","Mando a distancia","Altavoz","Reloj",
+    "Llaves","Cartera","Mochila","Botella de agua","Vaso","Taza","Plato","Cuchillo","Tenedor","Cuchara"
+  ],
+
+  "Conocidos (privado)": [
+    "Loren","Aita","Ama","Nerea","Ainhoa","Javi","Juan","Isabel","Miguel","Nelson",
+    "Ernesto","Ane","Judit","Amona","Amoñi","Mamen","Fugas","Txiki","La atia"
+  ]
+};
+
+/*** =========================
+ *  LÓGICA DEL JUEGO
+ *  ========================= */
+
+// Codificación simple en el hash (no “seguridad”, pero suficiente para juego familiar)
+function b64e(str){
+  return btoa(unescape(encodeURIComponent(str))).replaceAll("=","").replaceAll("+","-").replaceAll("/","_");
+}
+function b64d(str){
+  str = str.replaceAll("-","+").replaceAll("_","/");
+  const pad = str.length % 4; if(pad) str += "=".repeat(4-pad);
+  return decodeURIComponent(escape(atob(str)));
+}
+
+function randInt(n){ return Math.floor(Math.random()*n); }
+function pick(arr){ return arr[randInt(arr.length)]; }
+function keys(obj){ return Object.keys(obj); }
+
+function makePayload(obj){
+  obj._ = Math.random().toString(16).slice(2,10); // salt
+  return b64e(JSON.stringify(obj));
+}
+function readPayload(){
+  const h = location.hash || "";
+  if(!h.startsWith("#p=")) return null;
+  try{ return JSON.parse(b64d(h.slice(3))); } catch(e){ return null; }
+}
+
+function fillTopicSelect(){
+  const sel = document.getElementById("topicSelect");
+  sel.innerHTML = "";
+  keys(DATA).forEach(k=>{
+    const opt = document.createElement("option");
+    opt.value = k; opt.textContent = k;
+    sel.appendChild(opt);
+  });
+}
+fillTopicSelect();
+
+document.getElementById("topicMode").addEventListener("change", (e)=>{
+  const show = e.target.value === "choose";
+  document.getElementById("topicSelect").style.display = show ? "block" : "none";
+});
+
+function clampImpostors(nPlayers, k){
+  // al menos 1, como mucho nPlayers-1 (si no, nadie vería la palabra)
+  k = Math.max(1, Math.floor(k));
+  return Math.min(k, nPlayers - 1);
+}
+
+function sampleUniquePlayers(nPlayers, k){
+  // devuelve un Set con k jugadores (1..nPlayers), únicos
+  const chosen = new Set();
+  while(chosen.size < k){
+    chosen.add(randInt(nPlayers) + 1);
+  }
+  return chosen;
+}
+
+function hostGenerate(){
+  const n = Math.max(3, parseInt(document.getElementById("players").value || "6", 10));
+  let k = parseInt(document.getElementById("impostors").value || "1", 10);
+  k = clampImpostors(n, k);
+  document.getElementById("impostors").value = String(k); // normaliza UI
+
+  const mode = document.getElementById("topicMode").value;
+  const topic = mode === "choose" ? document.getElementById("topicSelect").value : pick(keys(DATA));
+  const word = pick(DATA[topic]);
+
+  const impostorSet = sampleUniquePlayers(n, k);
+
+  const baseUrl = location.href.split("#")[0].split("?")[0];
+
+  const links = [];
+  for(let i=1;i<=n;i++){
+    const isImp = impostorSet.has(i);
+    const payload = makePayload({
+      v: 2,
+      role: isImp ? "IMPOSTOR" : "NORMAL",
+      player: i,
+      topic,
+      word: isImp ? null : word,
+      // no metemos lista de impostores aquí para que ningún jugador la tenga
+    });
+    links.push({ i, url: `${baseUrl}#p=${payload}` });
+  }
+
+  const summary = document.getElementById("summary");
+  summary.innerHTML =
+    `Ronda lista. Tema: <b>${topic}</b>. Impostores: <b>${k}</b>. ` +
+    `(El anfitrión sabe la palabra: <b>${word}</b>). Envía un enlace a cada jugador.`;
+
+  const box = document.getElementById("links");
+  box.style.display = "block";
+  box.innerHTML = links.map(x => `
+    <div class="linkrow">
+      <b>Jugador ${x.i}</b>
+      <a href="${x.url}">${x.url}</a>
+      <button class="secondary" data-copy="${x.url}">Copiar</button>
+    </div>
+  `).join("");
+
+  box.querySelectorAll("button[data-copy]").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const u = btn.getAttribute("data-copy");
+      try{
+        await navigator.clipboard.writeText(u);
+        btn.textContent="¡Copiado!";
+        setTimeout(()=>btn.textContent="Copiar", 900);
+      }catch(e){
+        alert("No pude copiar automáticamente. Mantén pulsado el enlace y cópialo manualmente.");
+      }
+    });
+  });
+
+  const copyAllBtn = document.getElementById("copyAll");
+  copyAllBtn.style.display = "inline-block";
+  copyAllBtn.onclick = async ()=>{
+    const text = links.map(x=>`Jugador ${x.i}: ${x.url}`).join("\n");
+    try{
+      await navigator.clipboard.writeText(text);
+      alert("Copiado todo. Pégalo en WhatsApp y reparte.");
+    }catch(e){
+      alert("No pude copiar todo. Copia manualmente desde la lista.");
+    }
+  };
+}
+
+function hostReset(){
+  location.hash = "";
+  document.getElementById("summary").textContent = "Aún no hay ronda.";
+  document.getElementById("links").style.display = "none";
+  document.getElementById("links").innerHTML = "";
+  document.getElementById("copyAll").style.display = "none";
+}
+
+document.getElementById("newRound").addEventListener("click", hostGenerate);
+document.getElementById("reset").addEventListener("click", hostReset);
+
+// Player view
+function showPlayer(payload){
+  document.getElementById("hostView").style.display = "none";
+  document.getElementById("playerView").style.display = "block";
+
+  const theme = payload.topic || "Tema";
+  document.getElementById("pvTheme").textContent = `Tema: ${theme}`;
+  document.getElementById("pvWho").textContent = `Jugador ${payload.player ?? "?"}`;
+
+  const isImp = payload.role === "IMPOSTOR";
+  const text = isImp
+    ? `Eres el IMPOSTOR 😈\nTema: ${theme}\nPalabra: (no la sabes)`
+    : `No eres impostor ✅\nTema: ${theme}\nPalabra: ${payload.word}`;
+
+  document.getElementById("pvTitle").textContent = isImp ? "Impostor" : "Jugador normal";
+
+  const box = document.getElementById("pvBox");
+  const rev = document.getElementById("pvRevealBtn");
+  const hid = document.getElementById("pvHideBtn");
+
+  rev.addEventListener("click", ()=>{
+    box.textContent = text;
+    box.style.display = "block";
+    rev.style.display = "none";
+    hid.style.display = "inline-block";
+  });
+  hid.addEventListener("click", ()=>{
+    box.style.display = "none";
+    box.textContent = "";
+    rev.style.display = "inline-block";
+    hid.style.display = "none";
+  });
+}
+
+const payload = readPayload();
+if(payload){
+  showPlayer(payload);
+}
+</script>
+</body>
+</html>
