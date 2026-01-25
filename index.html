@@ -3,15 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Impostor por enlaces (tema sí, palabra no)</title>
+  <title>Impostor (tema sí, palabra no) — por enlaces</title>
   <style>
     :root{
       --bg:#0b0f17; --card:#121a2a; --card2:#0b1220; --b:#223050;
       --txt:#e8eefc; --muted:#a9b7d6; --accent:#2e6bff; --accent2:#1b2740; --danger:#d84b4b;
+      --ok:#2ecc71;
     }
     *{box-sizing:border-box}
     body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:var(--bg);color:var(--txt)}
-    .wrap{max-width:980px;margin:0 auto;padding:18px}
+    .wrap{max-width:1040px;margin:0 auto;padding:18px}
     .card{background:var(--card);border:1px solid var(--b);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
     h1{font-size:20px;margin:0 0 10px}
     .muted{color:var(--muted);font-size:14px;line-height:1.35}
@@ -20,58 +21,77 @@
       flex:1;min-width:170px;background:var(--card2);border:1px solid var(--b);color:var(--txt);
       border-radius:12px;padding:12px;font-size:16px
     }
+    input[type="checkbox"]{flex:0;min-width:auto;width:18px;height:18px}
+    label{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
     button{background:var(--accent);border:0;color:white;border-radius:12px;padding:12px 14px;font-size:16px;cursor:pointer}
     button.secondary{background:var(--accent2)}
     button.danger{background:var(--danger)}
+    button.ok{background:var(--ok)}
     .hr{height:1px;background:var(--b);margin:14px 0}
     .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--accent2);border:1px solid var(--b);font-size:13px;color:#cfe0ff}
     .links{margin-top:12px}
     .linkrow{
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
       margin:10px 0;padding:10px;background:var(--card2);border:1px solid var(--b);border-radius:14px
     }
-    .linkrow b{min-width:96px}
+    .linkrow .left{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .linkrow b{min-width:92px}
     .linkrow a{color:#9fc1ff;word-break:break-all}
     .reveal{font-size:18px;line-height:1.4;white-space:pre-wrap;background:var(--card2);border:1px solid var(--b);border-radius:14px;padding:14px;margin-top:12px}
     .big{font-size:22px;font-weight:700;margin:10px 0}
     .small{font-size:13px;color:var(--muted)}
     code{background:var(--card2);border:1px solid var(--b);border-radius:10px;padding:2px 6px}
     .twoCol{display:grid;grid-template-columns:1fr;gap:10px}
-    @media(min-width:860px){ .twoCol{grid-template-columns:1.1fr .9fr} }
+    @media(min-width:900px){ .twoCol{grid-template-columns:1.15fr .85fr} }
     .box{background:var(--card2);border:1px solid var(--b);border-radius:14px;padding:12px}
     ul{margin:8px 0 0 18px}
     .hint{font-size:12px;color:var(--muted);margin-top:6px}
+    .warn{color:#ffd6a6}
+    .oktxt{color:#b9f6ca}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>Impostor por enlaces (cada uno en su móvil)</h1>
+      <h1>Impostor (tema sí, palabra no) — enlaces + PIN (móvil)</h1>
 
+      <!-- HOST VIEW -->
       <div id="hostView">
         <div class="twoCol">
           <div class="box">
             <div class="muted">
-              Genera una ronda y envía a cada jugador su <b>enlace privado</b> (WhatsApp/Telegram).
-              El/los impostores verán <b>solo el tema</b>; el resto verá <b>tema + palabra</b>.
+              Genera una ronda y pega los <b>links</b> en el grupo. Para evitar que abran el link de otros,
+              activa <b>PIN</b> y envía a cada persona su <b>Slot + PIN</b> por DM.
             </div>
 
             <div class="row">
-              <input id="players" type="number" min="3" value="6" />
-              <input id="impostors" type="number" min="1" value="1" />
-              <select id="topicMode">
+              <input id="players" type="number" min="3" value="6" title="Número de jugadores" />
+              <input id="impostors" type="number" min="1" value="1" title="Número de impostores" />
+              <select id="topicMode" title="Tema">
                 <option value="random">Tema aleatorio</option>
                 <option value="choose">Elegir tema</option>
               </select>
               <select id="topicSelect" style="display:none;"></select>
             </div>
+
+            <div class="row">
+              <input id="names" type="text" placeholder="Nombres opcionales (coma): Juan, Isabel, Miguel..." />
+            </div>
+
+            <div class="row" style="justify-content:space-between">
+              <label><input id="usePin" type="checkbox" checked> Usar PIN para revelar rol</label>
+              <label><input id="showNamesInList" type="checkbox"> Mostrar nombres en la lista</label>
+            </div>
+
             <div class="hint">
-              <b>Jugadores</b> (mín 3) · <b>Impostores</b> (mín 1). Recomendación: 1 impostor hasta 6–7 jugadores, 2 a partir de 8–10.
+              Recomendación: 1 impostor hasta 6–7 jugadores; 2 a partir de 8–10. <br/>
+              <span class="warn">Si pegas todos los links al grupo, SIN PIN cualquiera puede abrir cualquiera.</span>
             </div>
 
             <div class="row">
               <button id="newRound">Generar ronda</button>
-              <button id="copyAll" class="secondary" style="display:none;">Copiar todos los enlaces</button>
+              <button id="copyAll" class="secondary" style="display:none;">Copiar links (grupo)</button>
+              <button id="copyDM" class="secondary" style="display:none;">Copiar mensajes (DM)</button>
               <button id="reset" class="danger">Reset</button>
             </div>
 
@@ -83,7 +103,7 @@
             <div class="hr"></div>
 
             <div class="muted">
-              <b>Personalización:</b> edita el objeto <code>DATA</code> dentro de este archivo (<code>index.html</code>).
+              <b>Personalización:</b> edita el objeto <code>DATA</code> dentro de este archivo.
             </div>
           </div>
 
@@ -98,42 +118,60 @@
             </ul>
             <div class="hr"></div>
             <div class="small">
-              Nota: estos enlaces contienen el rol de cada jugador. No los reenvíes si no queréis spoilers.
+              <span class="oktxt">PIN activado</span> = aunque alguien tenga el link, sin su PIN no puede ver el rol.
             </div>
           </div>
         </div>
       </div>
 
+      <!-- PLAYER VIEW -->
       <div id="playerView" style="display:none;">
-        <div class="muted">Este enlace es tu rol. No lo reenvíes si no quieres spoilers.</div>
+        <div class="muted">
+          Este enlace es un <b>slot</b>. Si hay PIN, necesitas tu PIN para revelar el rol.
+        </div>
+
         <div class="row" style="justify-content:space-between">
           <span class="pill" id="pvTheme"></span>
           <span class="pill" id="pvWho"></span>
         </div>
+
         <div class="big" id="pvTitle">Tu rol</div>
-        <div class="row">
-          <button id="pvRevealBtn">Revelar</button>
-          <button id="pvHideBtn" class="secondary" style="display:none;">Ocultar</button>
+
+        <!-- PIN gate -->
+        <div id="pinGate" class="box" style="margin-top:12px;">
+          <div class="muted">Introduce tu PIN para ver tu rol:</div>
+          <div class="row">
+            <input id="pvPin" inputmode="numeric" autocomplete="one-time-code" placeholder="PIN (6 dígitos)" />
+            <button id="pvPinBtn" class="ok">Verificar</button>
+          </div>
+          <div id="pvPinMsg" class="small" style="margin-top:6px;"></div>
         </div>
-        <div id="pvBox" class="reveal" style="display:none;"></div>
+
+        <!-- Reveal buttons -->
+        <div id="revealControls" style="display:none;">
+          <div class="row">
+            <button id="pvRevealBtn">Revelar</button>
+            <button id="pvHideBtn" class="secondary" style="display:none;">Ocultar</button>
+          </div>
+          <div id="pvBox" class="reveal" style="display:none;"></div>
+        </div>
       </div>
     </div>
   </div>
 
 <script>
 /*** =========================
- *  EDITA AQUÍ: TEMAS + LISTAS
+ *  TEMAS + LISTAS (fáciles)
  *  ========================= */
 const DATA = {
   "Países": [
-    "España","Portugal","Francia","Italia","Alemania","Reino Unido","Irlanda","Países Bajos","Bélgica","Suiza",
-    "Suecia","Noruega","Dinamarca","Finlandia","Islandia","Polonia","Grecia","Turquía","Marruecos","Argentina",
-    "Egipto","India","China","Japón","Corea del Sur","Australia","Estados Unidos","Canadá","México","Brasil"
+    "España","Portugal","Francia","Italia","Alemania","Reino Unido","Irlanda","Grecia","Turquía","Marruecos",
+    "Egipto","Israel","India","China","Japón","Corea del Sur","Australia","Estados Unidos","Canadá","México"
   ],
 
   "Animales": [
-    "Perro","Gato","Caballo","Vaca","Oveja","Cabra","Cerdo","Conejo","Elefante","Tigre",
-    "León","Jirafa","Cebra","Hipopótamo","Rinoceronte","Oso panda","Koala","Lobo","Delfín","Tiburón"
+    "Perro","Gato","Caballo","Vaca","Oveja","Cerdo","Conejo","Elefante","Tigre","León",
+    "Jirafa","Cebra","Oso panda","Koala","Lobo","Delfín","Tiburón","Pingüino","Águila","Serpiente"
   ],
 
   "Famosos (muy conocidos)": [
@@ -170,7 +208,7 @@ const DATA = {
     "Hospital","Colegio","Universidad","Biblioteca","Museo","Cine","Restaurante","Bar","Gimnasio","Hotel"
   ],
 
-  "Edificios y monumentos famosos (muy conocidos)": [
+  "Edificios y monumentos (muy conocidos)": [
     "Torre Eiffel","Coliseo de Roma","Sagrada Familia","Alhambra","Big Ben","Taj Mahal","Estatua de la Libertad","Gran Muralla China","Pirámides de Giza","Machu Picchu",
     "Ópera de Sídney","Burj Khalifa","Kremlin","Basílica de San Pedro","Notre Dame","Palacio de Versalles","Torre de Pisa","Puerta de Brandeburgo","Stonehenge","Mezquita-Catedral de Córdoba"
   ],
@@ -187,10 +225,18 @@ const DATA = {
 };
 
 /*** =========================
- *  LÓGICA DEL JUEGO
+ *  UTILIDADES
  *  ========================= */
+function randInt(n){ return Math.floor(Math.random()*n); }
+function pick(arr){ return arr[randInt(arr.length)]; }
+function keys(obj){ return Object.keys(obj); }
 
-// Codificación simple en el hash (no “seguridad”, pero suficiente para juego familiar)
+function parseNames(raw){
+  if(!raw) return [];
+  return raw.split(",").map(s=>s.trim()).filter(Boolean);
+}
+
+// Base64 URL-safe (para hash en URL)
 function b64e(str){
   return btoa(unescape(encodeURIComponent(str))).replaceAll("=","").replaceAll("+","-").replaceAll("/","_");
 }
@@ -199,10 +245,6 @@ function b64d(str){
   const pad = str.length % 4; if(pad) str += "=".repeat(4-pad);
   return decodeURIComponent(escape(atob(str)));
 }
-
-function randInt(n){ return Math.floor(Math.random()*n); }
-function pick(arr){ return arr[randInt(arr.length)]; }
-function keys(obj){ return Object.keys(obj); }
 
 function makePayload(obj){
   obj._ = Math.random().toString(16).slice(2,10); // salt
@@ -214,6 +256,31 @@ function readPayload(){
   try{ return JSON.parse(b64d(h.slice(3))); } catch(e){ return null; }
 }
 
+function clampImpostors(nPlayers, k){
+  k = Math.max(1, Math.floor(k));
+  return Math.min(k, nPlayers - 1);
+}
+function sampleUniquePlayers(nPlayers, k){
+  const chosen = new Set();
+  while(chosen.size < k) chosen.add(randInt(nPlayers) + 1);
+  return chosen;
+}
+function generatePin6(){
+  // 6 dígitos (000000–999999)
+  return String(Math.floor(Math.random() * 1000000)).padStart(6, "0");
+}
+
+// SHA-256(hex) usando WebCrypto (disponible en navegadores modernos)
+async function sha256Hex(str){
+  const data = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  const arr = Array.from(new Uint8Array(buf));
+  return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+/*** =========================
+ *  UI inicial
+ *  ========================= */
 function fillTopicSelect(){
   const sel = document.getElementById("topicSelect");
   sel.innerHTML = "";
@@ -230,86 +297,143 @@ document.getElementById("topicMode").addEventListener("change", (e)=>{
   document.getElementById("topicSelect").style.display = show ? "block" : "none";
 });
 
-function clampImpostors(nPlayers, k){
-  // al menos 1, como mucho nPlayers-1 (si no, nadie vería la palabra)
-  k = Math.max(1, Math.floor(k));
-  return Math.min(k, nPlayers - 1);
-}
-
-function sampleUniquePlayers(nPlayers, k){
-  // devuelve un Set con k jugadores (1..nPlayers), únicos
-  const chosen = new Set();
-  while(chosen.size < k){
-    chosen.add(randInt(nPlayers) + 1);
-  }
-  return chosen;
-}
-
-function hostGenerate(){
+/*** =========================
+ *  HOST: generar ronda
+ *  ========================= */
+async function hostGenerate(){
   const n = Math.max(3, parseInt(document.getElementById("players").value || "6", 10));
   let k = parseInt(document.getElementById("impostors").value || "1", 10);
   k = clampImpostors(n, k);
-  document.getElementById("impostors").value = String(k); // normaliza UI
+  document.getElementById("impostors").value = String(k);
 
   const mode = document.getElementById("topicMode").value;
   const topic = mode === "choose" ? document.getElementById("topicSelect").value : pick(keys(DATA));
   const word = pick(DATA[topic]);
 
-  const impostorSet = sampleUniquePlayers(n, k);
+  const usePin = document.getElementById("usePin").checked;
+  const showNamesInList = document.getElementById("showNamesInList").checked;
+  const names = parseNames(document.getElementById("names").value);
 
+  const impostorSet = sampleUniquePlayers(n, k);
   const baseUrl = location.href.split("#")[0].split("?")[0];
+
+  // Si hay PIN, generamos PIN por slot y guardamos su hash en payload (NO el PIN)
+  const pins = new Array(n).fill(null);
+  const pinHashes = new Array(n).fill(null);
+  if(usePin){
+    for(let i=0;i<n;i++){
+      pins[i] = generatePin6();
+      pinHashes[i] = await sha256Hex(pins[i]);
+    }
+  }
 
   const links = [];
   for(let i=1;i<=n;i++){
     const isImp = impostorSet.has(i);
+    const displayName = names[i-1] || null; // opcional
     const payload = makePayload({
-      v: 2,
+      v: 4,
       role: isImp ? "IMPOSTOR" : "NORMAL",
-      player: i,
+      slot: i,            // "slot" para no ligar a persona
+      name: displayName,  // opcional (si quieres)
       topic,
       word: isImp ? null : word,
-      // no metemos lista de impostores aquí para que ningún jugador la tenga
+      pin_hash: usePin ? pinHashes[i-1] : null
     });
-    links.push({ i, url: `${baseUrl}#p=${payload}` });
+    links.push({
+      slot: i,
+      name: displayName,
+      url: `${baseUrl}#p=${payload}`,
+      pin: usePin ? pins[i-1] : null
+    });
   }
 
+  // Summary
   const summary = document.getElementById("summary");
   summary.innerHTML =
     `Ronda lista. Tema: <b>${topic}</b>. Impostores: <b>${k}</b>. ` +
-    `(El anfitrión sabe la palabra: <b>${word}</b>). Envía un enlace a cada jugador.`;
+    `(El anfitrión sabe la palabra: <b>${word}</b>). ` +
+    (usePin ? `<span class="oktxt">PIN activado</span>.` : `<span class="warn">PIN desactivado</span>.`);
 
+  // Render list
   const box = document.getElementById("links");
   box.style.display = "block";
-  box.innerHTML = links.map(x => `
-    <div class="linkrow">
-      <b>Jugador ${x.i}</b>
-      <a href="${x.url}">${x.url}</a>
-      <button class="secondary" data-copy="${x.url}">Copiar</button>
-    </div>
-  `).join("");
+  box.innerHTML = links.map(x => {
+    const label = showNamesInList && x.name ? `Slot ${x.slot} (${x.name})` : `Slot ${x.slot}`;
+    const pinPart = usePin ? `<span class="pill">PIN: ${x.pin}</span>` : `<span class="pill">sin PIN</span>`;
+    return `
+      <div class="linkrow">
+        <div class="left">
+          <b>${label}</b>
+          <a href="${x.url}">${x.url}</a>
+          ${pinPart}
+        </div>
+        <div class="left">
+          <button class="secondary" data-copy="${x.url}">Copiar link</button>
+          ${usePin ? `<button class="secondary" data-copydm="${x.slot}">Copiar DM</button>` : ``}
+        </div>
+      </div>
+    `;
+  }).join("");
 
+  // Copy link buttons
   box.querySelectorAll("button[data-copy]").forEach(btn=>{
     btn.addEventListener("click", async ()=>{
       const u = btn.getAttribute("data-copy");
       try{
         await navigator.clipboard.writeText(u);
         btn.textContent="¡Copiado!";
-        setTimeout(()=>btn.textContent="Copiar", 900);
+        setTimeout(()=>btn.textContent="Copiar link", 900);
       }catch(e){
         alert("No pude copiar automáticamente. Mantén pulsado el enlace y cópialo manualmente.");
       }
     });
   });
 
+  // Copy DM per slot (slot + link + pin)
+  box.querySelectorAll("button[data-copydm]").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const slot = parseInt(btn.getAttribute("data-copydm"), 10);
+      const x = links.find(z => z.slot === slot);
+      const who = (x.name ? `Hola ${x.name}. ` : "");
+      const msg = `${who}Tu slot es ${x.slot}.\nLink: ${x.url}\nPIN: ${x.pin}\n(No lo compartas)`;
+      try{
+        await navigator.clipboard.writeText(msg);
+        btn.textContent="¡DM copiado!";
+        setTimeout(()=>btn.textContent="Copiar DM", 900);
+      }catch(e){
+        alert("No pude copiar automáticamente. Copia el texto manualmente.");
+      }
+    });
+  });
+
+  // Copy All (group): only links (no pins)
   const copyAllBtn = document.getElementById("copyAll");
   copyAllBtn.style.display = "inline-block";
   copyAllBtn.onclick = async ()=>{
-    const text = links.map(x=>`Jugador ${x.i}: ${x.url}`).join("\n");
+    const text = links.map(x => `Slot ${x.slot}: ${x.url}`).join("\n");
     try{
       await navigator.clipboard.writeText(text);
-      alert("Copiado todo. Pégalo en WhatsApp y reparte.");
+      alert("Copiado. Pégalo en el grupo (solo links). Luego manda Slot+PIN por DM.");
     }catch(e){
-      alert("No pude copiar todo. Copia manualmente desde la lista.");
+      alert("No pude copiar. Copia manualmente desde la lista.");
+    }
+  };
+
+  // Copy DM (bulk)
+  const copyDMBtn = document.getElementById("copyDM");
+  copyDMBtn.style.display = usePin ? "inline-block" : "none";
+  copyDMBtn.onclick = async ()=>{
+    if(!usePin) return;
+    const text = links.map(x => {
+      const who = x.name ? `(${x.name}) ` : "";
+      return `DM ${who}Slot ${x.slot}\nLink: ${x.url}\nPIN: ${x.pin}\n`;
+    }).join("\n");
+    try{
+      await navigator.clipboard.writeText(text);
+      alert("Copiado. Ahora pega y reparte por DM (separando cada bloque).");
+    }catch(e){
+      alert("No pude copiar. Copia manualmente desde la lista.");
     }
   };
 }
@@ -317,24 +441,91 @@ function hostGenerate(){
 function hostReset(){
   location.hash = "";
   document.getElementById("summary").textContent = "Aún no hay ronda.";
-  document.getElementById("links").style.display = "none";
-  document.getElementById("links").innerHTML = "";
+  const box = document.getElementById("links");
+  box.style.display = "none";
+  box.innerHTML = "";
   document.getElementById("copyAll").style.display = "none";
+  document.getElementById("copyDM").style.display = "none";
 }
 
-document.getElementById("newRound").addEventListener("click", hostGenerate);
+document.getElementById("newRound").addEventListener("click", ()=>{
+  hostGenerate().catch(err=>{
+    console.error(err);
+    alert("Error generando ronda. Tu navegador soporta WebCrypto? (debería).");
+  });
+});
 document.getElementById("reset").addEventListener("click", hostReset);
 
-// Player view
+/*** =========================
+ *  PLAYER VIEW
+ *  ========================= */
 function showPlayer(payload){
   document.getElementById("hostView").style.display = "none";
   document.getElementById("playerView").style.display = "block";
 
   const theme = payload.topic || "Tema";
   document.getElementById("pvTheme").textContent = `Tema: ${theme}`;
-  document.getElementById("pvWho").textContent = `Jugador ${payload.player ?? "?"}`;
 
+  const who = payload.name ? `Slot ${payload.slot} (${payload.name})` : `Slot ${payload.slot ?? "?"}`;
+  document.getElementById("pvWho").textContent = who;
+
+  // PIN gate
+  const needsPin = !!payload.pin_hash;
+  const pinGate = document.getElementById("pinGate");
+  const controls = document.getElementById("revealControls");
+
+  if(!needsPin){
+    pinGate.style.display = "none";
+    controls.style.display = "block";
+    initReveal(payload);
+    return;
+  }
+
+  pinGate.style.display = "block";
+  controls.style.display = "none";
+
+  const pinInput = document.getElementById("pvPin");
+  const pinBtn = document.getElementById("pvPinBtn");
+  const pinMsg = document.getElementById("pvPinMsg");
+
+  pinBtn.onclick = async ()=>{
+    const pin = (pinInput.value || "").trim();
+    if(!/^\d{6}$/.test(pin)){
+      pinMsg.textContent = "Introduce un PIN de 6 dígitos.";
+      pinMsg.style.color = "#ffd6a6";
+      return;
+    }
+    pinMsg.textContent = "Verificando...";
+    pinMsg.style.color = "#a9b7d6";
+
+    try{
+      const h = await sha256Hex(pin);
+      if(h === payload.pin_hash){
+        pinMsg.textContent = "PIN correcto ✅";
+        pinMsg.style.color = "#b9f6ca";
+        pinGate.style.display = "none";
+        controls.style.display = "block";
+        initReveal(payload);
+      }else{
+        pinMsg.textContent = "PIN incorrecto ❌";
+        pinMsg.style.color = "#ffb3b3";
+      }
+    }catch(e){
+      pinMsg.textContent = "Error verificando PIN.";
+      pinMsg.style.color = "#ffb3b3";
+    }
+  };
+
+  // enter = verify
+  pinInput.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter") pinBtn.click();
+  });
+}
+
+function initReveal(payload){
+  const theme = payload.topic || "Tema";
   const isImp = payload.role === "IMPOSTOR";
+
   const text = isImp
     ? `Eres el IMPOSTOR 😈\nTema: ${theme}\nPalabra: (no la sabes)`
     : `No eres impostor ✅\nTema: ${theme}\nPalabra: ${payload.word}`;
@@ -345,20 +536,21 @@ function showPlayer(payload){
   const rev = document.getElementById("pvRevealBtn");
   const hid = document.getElementById("pvHideBtn");
 
-  rev.addEventListener("click", ()=>{
+  rev.onclick = ()=>{
     box.textContent = text;
     box.style.display = "block";
     rev.style.display = "none";
     hid.style.display = "inline-block";
-  });
-  hid.addEventListener("click", ()=>{
+  };
+  hid.onclick = ()=>{
     box.style.display = "none";
     box.textContent = "";
     rev.style.display = "inline-block";
     hid.style.display = "none";
-  });
+  };
 }
 
+// Auto: si hay payload en URL, entra a player view
 const payload = readPayload();
 if(payload){
   showPlayer(payload);
