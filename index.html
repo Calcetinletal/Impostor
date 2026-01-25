@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Impostor (tema sí, palabra no) — por enlaces</title>
+  <title>Impostor — Sala + Ronda (link único)</title>
   <style>
     :root{
       --bg:#0b0f17; --card:#121a2a; --card2:#0b1220; --b:#223050;
@@ -21,153 +21,134 @@
       flex:1;min-width:170px;background:var(--card2);border:1px solid var(--b);color:var(--txt);
       border-radius:12px;padding:12px;font-size:16px
     }
-    input[type="checkbox"]{flex:0;min-width:auto;width:18px;height:18px}
-    label{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
     button{background:var(--accent);border:0;color:white;border-radius:12px;padding:12px 14px;font-size:16px;cursor:pointer}
     button.secondary{background:var(--accent2)}
     button.danger{background:var(--danger)}
     button.ok{background:var(--ok)}
     .hr{height:1px;background:var(--b);margin:14px 0}
     .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--accent2);border:1px solid var(--b);font-size:13px;color:#cfe0ff}
-    .links{margin-top:12px}
-    .linkrow{
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
-      margin:10px 0;padding:10px;background:var(--card2);border:1px solid var(--b);border-radius:14px
-    }
-    .linkrow .left{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .linkrow b{min-width:92px}
-    .linkrow a{color:#9fc1ff;word-break:break-all}
-    .reveal{font-size:18px;line-height:1.4;white-space:pre-wrap;background:var(--card2);border:1px solid var(--b);border-radius:14px;padding:14px;margin-top:12px}
     .big{font-size:22px;font-weight:700;margin:10px 0}
-    .small{font-size:13px;color:var(--muted)}
-    code{background:var(--card2);border:1px solid var(--b);border-radius:10px;padding:2px 6px}
     .twoCol{display:grid;grid-template-columns:1fr;gap:10px}
-    @media(min-width:900px){ .twoCol{grid-template-columns:1.15fr .85fr} }
+    @media(min-width:900px){ .twoCol{grid-template-columns:1.1fr .9fr} }
     .box{background:var(--card2);border:1px solid var(--b);border-radius:14px;padding:12px}
-    ul{margin:8px 0 0 18px}
+    .reveal{font-size:18px;line-height:1.4;white-space:pre-wrap;background:var(--card2);border:1px solid var(--b);border-radius:14px;padding:14px;margin-top:12px}
     .hint{font-size:12px;color:var(--muted);margin-top:6px}
     .warn{color:#ffd6a6}
-    .oktxt{color:#b9f6ca}
+    code{background:var(--card2);border:1px solid var(--b);border-radius:10px;padding:2px 6px}
+    ul{margin:8px 0 0 18px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>Impostor (tema sí, palabra no) — enlaces + PIN (móvil)</h1>
+      <h1>Impostor — Sala + Ronda (sin reenviar links)</h1>
+      <div class="muted">
+        Enviad este link <b>una vez</b>. Luego, para cada ronda, el anfitrión solo dice:
+        <b>Sala</b> + <b>Ronda</b>. Cada móvil calcula su carta.
+      </div>
 
-      <!-- HOST VIEW -->
-      <div id="hostView">
-        <div class="twoCol">
-          <div class="box">
-            <div class="muted">
-              Genera una ronda y pega los <b>links</b> en el grupo. Para evitar que abran el link de otros,
-              activa <b>PIN</b> y envía a cada persona su <b>Slot + PIN</b> por DM.
-              <br><span class="oktxt">Nota:</span> el anfitrión <b>NO verá la palabra</b>.
-            </div>
+      <div class="twoCol">
+        <!-- HOST -->
+        <div class="box" id="hostBox">
+          <div class="big" style="margin-top:0;">Anfitrión</div>
 
-            <div class="row">
-              <input id="players" type="number" min="3" value="6" title="Número de jugadores" />
-              <input id="impostors" type="number" min="1" value="1" title="Número de impostores" />
-              <select id="topicMode" title="Tema">
-                <option value="random">Tema aleatorio</option>
-                <option value="choose">Elegir tema</option>
-              </select>
-              <select id="topicSelect" style="display:none;"></select>
-            </div>
-
-            <div class="row" style="justify-content:space-between">
-              <label><input id="usePin" type="checkbox" checked> Usar PIN para revelar rol</label>
-            </div>
-
-            <div class="hint">
-              Recomendación: 1 impostor hasta 6–7 jugadores; 2 a partir de 8–10. <br/>
-              <span class="warn">Si pegas todos los links al grupo, SIN PIN cualquiera puede abrir cualquiera.</span>
-            </div>
-
-            <div class="row">
-              <button id="newRound">Generar ronda</button>
-              <button id="copyAll" class="secondary" style="display:none;">Copiar links (grupo)</button>
-              <button id="copyDM" class="secondary" style="display:none;">Copiar mensajes (DM)</button>
-              <button id="reset" class="danger">Reset</button>
-            </div>
-
-            <div class="hr"></div>
-
-            <div id="summary" class="muted">Aún no hay ronda.</div>
-            <div id="links" class="links" style="display:none;"></div>
-
-            <div class="hr"></div>
-
-            <div class="muted">
-              <b>Personalización:</b> edita el objeto <code>DATA</code> dentro de este archivo.
-            </div>
+          <div class="row">
+            <input id="roomHost" placeholder="Sala (ej: FAMILIA2026)" />
+            <input id="roundHost" type="number" min="1" value="1" />
           </div>
 
-          <div class="box">
-            <div class="big" style="margin-top:0">Reglas rápidas</div>
-            <ul class="muted">
-              <li><b>Normales</b>: ven tema + palabra.</li>
-              <li><b>Impostor(es)</b>: ven solo tema.</li>
-              <li>1–2 vueltas: cada uno da una pista (sin decir la palabra).</li>
-              <li>Debate corto y votación.</li>
-              <li>(Opcional) si pillan al impostor, puede intentar adivinar la palabra.</li>
-            </ul>
-            <div class="hr"></div>
-            <div class="small">
-              <span class="oktxt">PIN activado</span> = aunque alguien tenga el link, sin su PIN no puede ver el rol.
-            </div>
+          <div class="row">
+            <input id="playersHost" type="number" min="3" value="6" title="Jugadores" />
+            <input id="impostorsHost" type="number" min="1" value="1" title="Impostores" />
           </div>
+
+          <div class="row">
+            <select id="topicModeHost">
+              <option value="random">Tema aleatorio</option>
+              <option value="choose">Elegir tema</option>
+            </select>
+            <select id="topicSelectHost" style="display:none;"></select>
+          </div>
+
+          <div class="row">
+            <button id="hostCompute" class="ok">Actualizar ronda (mostrar tema)</button>
+            <button id="hostNext">Siguiente ronda (+1)</button>
+            <button id="hostReset" class="danger">Reset</button>
+          </div>
+
+          <div class="hint warn">
+            El anfitrión <b>no verá la palabra</b> (solo el tema). Para sincronizar, enseña/di el número de ronda.
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="muted">Anuncio para decir en voz alta:</div>
+          <div class="reveal" id="hostAnnounce">—</div>
+
+          <div class="hr"></div>
+
+          <div class="muted">Tema (solo para guiar la partida):</div>
+          <div class="reveal" id="hostTheme">—</div>
+
+          <div class="hint">
+            Nota: sin servidor no se puede impedir que alguien cambie de “slot” para curiosear.
+          </div>
+        </div>
+
+        <!-- PLAYER -->
+        <div class="box" id="playerBox">
+          <div class="big" style="margin-top:0;">Jugador</div>
+
+          <div class="row">
+            <input id="roomPlayer" placeholder="Sala (igual que anfitrión)" />
+            <input id="roundPlayer" type="number" min="1" value="1" />
+          </div>
+
+          <div class="row">
+            <input id="namePlayer" placeholder="Tu nombre (opcional)" />
+            <input id="slotPlayer" type="number" min="1" value="1" title="Tu slot" />
+          </div>
+
+          <div class="row">
+            <button id="playerSync" class="ok">Actualizar mi carta</button>
+            <button id="playerHide" class="secondary" style="display:none;">Ocultar</button>
+          </div>
+
+          <div class="hint">
+            Consejo: Elegid slots fijos (1..N) al inicio y no los cambiéis.
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="row" style="justify-content:space-between">
+            <span class="pill" id="pvTheme">Tema: —</span>
+            <span class="pill" id="pvMe">Slot: —</span>
+          </div>
+
+          <div class="reveal" id="playerCard" style="display:none;">—</div>
+
+          <div class="hr"></div>
+
+          <div class="muted"><b>Reglas rápidas</b></div>
+          <ul class="muted">
+            <li>Normales: ven tema + palabra.</li>
+            <li>Impostor(es): ven solo tema.</li>
+            <li>1–2 vueltas de pistas, debate corto, votación.</li>
+          </ul>
         </div>
       </div>
 
-      <!-- PLAYER VIEW -->
-      <div id="playerView" style="display:none;">
-        <div class="muted">
-          Este enlace es un <b>slot</b>. Si hay PIN, necesitas tu PIN para revelar el rol.
-        </div>
+      <div class="hr"></div>
 
-        <div class="row" style="justify-content:space-between">
-          <span class="pill" id="pvTheme"></span>
-          <span class="pill" id="pvWho"></span>
-        </div>
-
-        <div class="big" id="pvTitle">Tu rol</div>
-
-        <!-- Name -->
-        <div class="box" style="margin-top:12px;">
-          <div class="muted">Tu nombre (opcional):</div>
-          <div class="row">
-            <input id="pvName" type="text" placeholder="Escribe tu nombre..." />
-            <button id="pvSaveName" class="secondary">Guardar</button>
-          </div>
-          <div class="small">Se guarda solo en tu móvil/navegador.</div>
-        </div>
-
-        <!-- PIN gate -->
-        <div id="pinGate" class="box" style="margin-top:12px;">
-          <div class="muted">Introduce tu PIN para ver tu rol:</div>
-          <div class="row">
-            <input id="pvPin" inputmode="numeric" autocomplete="one-time-code" placeholder="PIN (6 dígitos)" />
-            <button id="pvPinBtn" class="ok">Verificar</button>
-          </div>
-          <div id="pvPinMsg" class="small" style="margin-top:6px;"></div>
-        </div>
-
-        <!-- Reveal buttons -->
-        <div id="revealControls" style="display:none;">
-          <div class="row">
-            <button id="pvRevealBtn">Revelar</button>
-            <button id="pvHideBtn" class="secondary" style="display:none;">Ocultar</button>
-          </div>
-          <div id="pvBox" class="reveal" style="display:none;"></div>
-        </div>
+      <div class="muted">
+        <b>Personalización:</b> edita <code>DATA</code> más abajo.
       </div>
     </div>
   </div>
 
 <script>
 /*** =========================
- *  TEMAS + LISTAS (fáciles)
+ *  TEMAS + LISTAS
  *  ========================= */
 const DATA = {
   "Países": [
@@ -221,58 +202,63 @@ const DATA = {
 };
 
 /*** =========================
- *  UTILIDADES
+ *  RNG con semilla (determinista)
  *  ========================= */
-function randInt(n){ return Math.floor(Math.random()*n); }
-function pick(arr){ return arr[randInt(arr.length)]; }
-function keys(obj){ return Object.keys(obj); }
-
-// Base64 URL-safe (para hash en URL)
-function b64e(str){
-  return btoa(unescape(encodeURIComponent(str))).replaceAll("=","").replaceAll("+","-").replaceAll("/","_");
+// hash -> 128-bit seed (cyrb128) + PRNG (sfc32)
+function cyrb128(str) {
+  let h1 = 1779033703, h2 = 3144134277, h3 = 1013904242, h4 = 2773480762;
+  for (let i = 0, k; i < str.length; i++) {
+    k = str.charCodeAt(i);
+    h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
+    h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
+    h3 = h4 ^ Math.imul(h3 ^ k, 951274213);
+    h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+  }
+  h1 = Math.imul(h3 ^ (h1 >>> 18), 597399067);
+  h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
+  h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213);
+  h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
+  return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
 }
-function b64d(str){
-  str = str.replaceAll("-","+").replaceAll("_","/");
-  const pad = str.length % 4; if(pad) str += "=".repeat(4-pad);
-  return decodeURIComponent(escape(atob(str)));
+function sfc32(a, b, c, d) {
+  return function() {
+    a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
+    let t = (a + b) | 0;
+    a = b ^ (b >>> 9);
+    b = (c + (c << 3)) | 0;
+    c = (c << 21) | (c >>> 11);
+    d = (d + 1) | 0;
+    t = (t + d) | 0;
+    c = (c + t) | 0;
+    return (t >>> 0) / 4294967296;
+  }
 }
-
-function makePayload(obj){
-  obj._ = Math.random().toString(16).slice(2,10); // salt
-  return b64e(JSON.stringify(obj));
+function makeRng(seedStr){
+  const s = cyrb128(seedStr);
+  return sfc32(s[0], s[1], s[2], s[3]);
 }
-function readPayload(){
-  const h = location.hash || "";
-  if(!h.startsWith("#p=")) return null;
-  try{ return JSON.parse(b64d(h.slice(3))); } catch(e){ return null; }
-}
+function randInt(rng, n){ return Math.floor(rng()*n); }
+function pick(rng, arr){ return arr[randInt(rng, arr.length)]; }
 
 function clampImpostors(nPlayers, k){
   k = Math.max(1, Math.floor(k));
   return Math.min(k, nPlayers - 1);
 }
-function sampleUniquePlayers(nPlayers, k){
-  const chosen = new Set();
-  while(chosen.size < k) chosen.add(randInt(nPlayers) + 1);
-  return chosen;
-}
-function generatePin6(){
-  return String(Math.floor(Math.random() * 1000000)).padStart(6, "0");
-}
-
-// SHA-256(hex) usando WebCrypto
-async function sha256Hex(str){
-  const data = new TextEncoder().encode(str);
-  const buf = await crypto.subtle.digest("SHA-256", data);
-  const arr = Array.from(new Uint8Array(buf));
-  return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
+function sampleImpostors(rng, nPlayers, k){
+  const set = new Set();
+  while(set.size < k){
+    set.add(randInt(rng, nPlayers) + 1); // 1..n
+  }
+  return set;
 }
 
 /*** =========================
- *  UI inicial
+ *  UI init
  *  ========================= */
+function keys(obj){ return Object.keys(obj); }
+
 function fillTopicSelect(){
-  const sel = document.getElementById("topicSelect");
+  const sel = document.getElementById("topicSelectHost");
   sel.innerHTML = "";
   keys(DATA).forEach(k=>{
     const opt = document.createElement("option");
@@ -282,275 +268,172 @@ function fillTopicSelect(){
 }
 fillTopicSelect();
 
-document.getElementById("topicMode").addEventListener("change", (e)=>{
-  const show = e.target.value === "choose";
-  document.getElementById("topicSelect").style.display = show ? "block" : "none";
+document.getElementById("topicModeHost").addEventListener("change", (e)=>{
+  document.getElementById("topicSelectHost").style.display = (e.target.value === "choose") ? "block" : "none";
 });
 
 /*** =========================
- *  HOST: generar ronda
+ *  Estado local (para no reescribir siempre)
  *  ========================= */
-async function hostGenerate(){
-  const n = Math.max(3, parseInt(document.getElementById("players").value || "6", 10));
-  let k = parseInt(document.getElementById("impostors").value || "1", 10);
-  k = clampImpostors(n, k);
-  document.getElementById("impostors").value = String(k);
+const LS = {
+  room: "imp_room",
+  roundH: "imp_round_host",
+  playersH: "imp_players_host",
+  impostorsH: "imp_impostors_host",
+  topicModeH: "imp_topic_mode_host",
+  topicSelH: "imp_topic_sel_host",
+  roomP: "imp_room_player",
+  roundP: "imp_round_player",
+  slotP: "imp_slot_player",
+  nameP: "imp_name_player"
+};
 
-  const mode = document.getElementById("topicMode").value;
-  const topic = mode === "choose" ? document.getElementById("topicSelect").value : pick(keys(DATA));
-  const word = pick(DATA[topic]); // se genera igual, pero NO se muestra al host
+function loadSaved(){
+  const rh = localStorage.getItem(LS.room) || "";
+  document.getElementById("roomHost").value = rh;
+  document.getElementById("roomPlayer").value = localStorage.getItem(LS.roomP) || rh;
 
-  const usePin = document.getElementById("usePin").checked;
-  const impostorSet = sampleUniquePlayers(n, k);
-  const baseUrl = location.href.split("#")[0].split("?")[0];
+  document.getElementById("roundHost").value = localStorage.getItem(LS.roundH) || "1";
+  document.getElementById("playersHost").value = localStorage.getItem(LS.playersH) || "6";
+  document.getElementById("impostorsHost").value = localStorage.getItem(LS.impostorsH) || "1";
+  document.getElementById("topicModeHost").value = localStorage.getItem(LS.topicModeH) || "random";
+  document.getElementById("topicSelectHost").value = localStorage.getItem(LS.topicSelH) || keys(DATA)[0];
 
-  const pins = new Array(n).fill(null);
-  const pinHashes = new Array(n).fill(null);
-  if(usePin){
-    for(let i=0;i<n;i++){
-      pins[i] = generatePin6();
-      pinHashes[i] = await sha256Hex(pins[i]);
-    }
-  }
+  document.getElementById("roundPlayer").value = localStorage.getItem(LS.roundP) || localStorage.getItem(LS.roundH) || "1";
+  document.getElementById("slotPlayer").value = localStorage.getItem(LS.slotP) || "1";
+  document.getElementById("namePlayer").value = localStorage.getItem(LS.nameP) || "";
 
-  const links = [];
-  for(let i=1;i<=n;i++){
-    const isImp = impostorSet.has(i);
-    const payload = makePayload({
-      v: 5,
-      role: isImp ? "IMPOSTOR" : "NORMAL",
-      slot: i,
-      topic,
-      word: isImp ? null : word,
-      pin_hash: usePin ? pinHashes[i-1] : null
-    });
-    links.push({
-      slot: i,
-      url: `${baseUrl}#p=${payload}`,
-      pin: usePin ? pins[i-1] : null
-    });
-  }
-
-  // Summary SIN palabra
-  const summary = document.getElementById("summary");
-  summary.innerHTML =
-    `Ronda lista. Tema: <b>${topic}</b>. Impostores: <b>${k}</b>. ` +
-    (usePin ? `<span class="oktxt">PIN activado</span>.` : `<span class="warn">PIN desactivado</span>.`);
-
-  // Render list
-  const box = document.getElementById("links");
-  box.style.display = "block";
-  box.innerHTML = links.map(x => {
-    const pinPart = usePin ? `<span class="pill">PIN: ${x.pin}</span>` : `<span class="pill">sin PIN</span>`;
-    return `
-      <div class="linkrow">
-        <div class="left">
-          <b>Slot ${x.slot}</b>
-          <a href="${x.url}">${x.url}</a>
-          ${pinPart}
-        </div>
-        <div class="left">
-          <button class="secondary" data-copy="${x.url}">Copiar link</button>
-          ${usePin ? `<button class="secondary" data-copydm="${x.slot}">Copiar DM</button>` : ``}
-        </div>
-      </div>
-    `;
-  }).join("");
-
-  // Copy link buttons
-  box.querySelectorAll("button[data-copy]").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
-      const u = btn.getAttribute("data-copy");
-      try{
-        await navigator.clipboard.writeText(u);
-        btn.textContent="¡Copiado!";
-        setTimeout(()=>btn.textContent="Copiar link", 900);
-      }catch(e){
-        alert("No pude copiar automáticamente. Mantén pulsado el enlace y cópialo manualmente.");
-      }
-    });
-  });
-
-  // Copy DM per slot (slot + link + pin)
-  box.querySelectorAll("button[data-copydm]").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
-      const slot = parseInt(btn.getAttribute("data-copydm"), 10);
-      const x = links.find(z => z.slot === slot);
-      const msg = `Tu slot es ${x.slot}.\nLink: ${x.url}\nPIN: ${x.pin}\n(No lo compartas)`;
-      try{
-        await navigator.clipboard.writeText(msg);
-        btn.textContent="¡DM copiado!";
-        setTimeout(()=>btn.textContent="Copiar DM", 900);
-      }catch(e){
-        alert("No pude copiar automáticamente. Copia el texto manualmente.");
-      }
-    });
-  });
-
-  // Copy All (group): only links (no pins)
-  const copyAllBtn = document.getElementById("copyAll");
-  copyAllBtn.style.display = "inline-block";
-  copyAllBtn.onclick = async ()=>{
-    const text = links.map(x => `Slot ${x.slot}: ${x.url}`).join("\n");
-    try{
-      await navigator.clipboard.writeText(text);
-      alert("Copiado. Pégalo en el grupo (solo links). Luego manda Slot+PIN por DM.");
-    }catch(e){
-      alert("No pude copiar. Copia manualmente desde la lista.");
-    }
-  };
-
-  // Copy DM (bulk)
-  const copyDMBtn = document.getElementById("copyDM");
-  copyDMBtn.style.display = usePin ? "inline-block" : "none";
-  copyDMBtn.onclick = async ()=>{
-    if(!usePin) return;
-    const text = links.map(x => `Slot ${x.slot}\nLink: ${x.url}\nPIN: ${x.pin}\n`).join("\n");
-    try{
-      await navigator.clipboard.writeText(text);
-      alert("Copiado. Ahora reparte por DM (separando cada bloque).");
-    }catch(e){
-      alert("No pude copiar. Copia manualmente desde la lista.");
-    }
-  };
+  document.getElementById("topicSelectHost").style.display =
+    (document.getElementById("topicModeHost").value === "choose") ? "block" : "none";
 }
+loadSaved();
 
-function hostReset(){
-  location.hash = "";
-  document.getElementById("summary").textContent = "Aún no hay ronda.";
-  const box = document.getElementById("links");
-  box.style.display = "none";
-  box.innerHTML = "";
-  document.getElementById("copyAll").style.display = "none";
-  document.getElementById("copyDM").style.display = "none";
+function saveHost(){
+  localStorage.setItem(LS.room, document.getElementById("roomHost").value.trim());
+  localStorage.setItem(LS.roundH, String(document.getElementById("roundHost").value));
+  localStorage.setItem(LS.playersH, String(document.getElementById("playersHost").value));
+  localStorage.setItem(LS.impostorsH, String(document.getElementById("impostorsHost").value));
+  localStorage.setItem(LS.topicModeH, document.getElementById("topicModeHost").value);
+  localStorage.setItem(LS.topicSelH, document.getElementById("topicSelectHost").value);
+
+  // Por comodidad, empuja sala al jugador en ESTE dispositivo
+  localStorage.setItem(LS.roomP, document.getElementById("roomHost").value.trim());
+  localStorage.setItem(LS.roundP, String(document.getElementById("roundHost").value));
 }
-
-document.getElementById("newRound").addEventListener("click", ()=>{
-  hostGenerate().catch(err=>{
-    console.error(err);
-    alert("Error generando ronda. (¿Navegador muy antiguo?)");
-  });
-});
-document.getElementById("reset").addEventListener("click", hostReset);
+function savePlayer(){
+  localStorage.setItem(LS.roomP, document.getElementById("roomPlayer").value.trim());
+  localStorage.setItem(LS.roundP, String(document.getElementById("roundPlayer").value));
+  localStorage.setItem(LS.slotP, String(document.getElementById("slotPlayer").value));
+  localStorage.setItem(LS.nameP, document.getElementById("namePlayer").value.trim());
+}
 
 /*** =========================
- *  PLAYER VIEW
+ *  Motor de ronda
  *  ========================= */
-function slotKey(slot){ return `impostor_name_slot_${slot}`; }
+function computeRound(params){
+  const { room, round, nPlayers, kImpostors, topicMode, chosenTopic } = params;
 
-function showPlayer(payload){
-  document.getElementById("hostView").style.display = "none";
-  document.getElementById("playerView").style.display = "block";
+  const seedBase = `ROOM=${room}|ROUND=${round}|N=${nPlayers}|K=${kImpostors}|MODE=${topicMode}|TOPIC=${chosenTopic||""}`;
+  const rng = makeRng(seedBase);
 
-  const theme = payload.topic || "Tema";
-  document.getElementById("pvTheme").textContent = `Tema: ${theme}`;
+  const topics = keys(DATA);
+  const topic = (topicMode === "choose" && chosenTopic) ? chosenTopic : topics[randInt(rng, topics.length)];
+  const word = pick(rng, DATA[topic]);
 
-  const slot = payload.slot ?? "?";
-  const savedName = (slot !== "?" ? localStorage.getItem(slotKey(slot)) : "") || "";
-  const nameLabel = savedName ? `Slot ${slot} (${savedName})` : `Slot ${slot}`;
-  document.getElementById("pvWho").textContent = nameLabel;
+  const impostors = sampleImpostors(rng, nPlayers, kImpostors);
 
-  // name input
-  const pvName = document.getElementById("pvName");
-  const pvSave = document.getElementById("pvSaveName");
-  pvName.value = savedName;
-  pvSave.onclick = () => {
-    const newName = pvName.value.trim();
-    if(slot === "?") return;
-    if(newName){
-      localStorage.setItem(slotKey(slot), newName);
-      document.getElementById("pvWho").textContent = `Slot ${slot} (${newName})`;
-    }else{
-      localStorage.removeItem(slotKey(slot));
-      document.getElementById("pvWho").textContent = `Slot ${slot}`;
-    }
-  };
+  return { topic, word, impostors };
+}
 
-  // PIN gate
-  const needsPin = !!payload.pin_hash;
-  const pinGate = document.getElementById("pinGate");
-  const controls = document.getElementById("revealControls");
+/*** =========================
+ *  HOST actions
+ *  ========================= */
+function hostUpdate(showIncrement=false){
+  const room = document.getElementById("roomHost").value.trim();
+  const round = Math.max(1, parseInt(document.getElementById("roundHost").value || "1", 10));
+  const nPlayers = Math.max(3, parseInt(document.getElementById("playersHost").value || "6", 10));
+  let k = parseInt(document.getElementById("impostorsHost").value || "1", 10);
+  k = clampImpostors(nPlayers, k);
+  document.getElementById("impostorsHost").value = String(k);
 
-  if(!needsPin){
-    pinGate.style.display = "none";
-    controls.style.display = "block";
-    initReveal(payload);
+  const topicMode = document.getElementById("topicModeHost").value;
+  const chosenTopic = document.getElementById("topicSelectHost").value;
+
+  if(!room){
+    document.getElementById("hostAnnounce").textContent = "Pon una Sala (ej: FAMILIA2026).";
+    document.getElementById("hostTheme").textContent = "—";
     return;
   }
 
-  pinGate.style.display = "block";
-  controls.style.display = "none";
+  const out = computeRound({ room, round, nPlayers, kImpostors: k, topicMode, chosenTopic });
 
-  const pinInput = document.getElementById("pvPin");
-  const pinBtn = document.getElementById("pvPinBtn");
-  const pinMsg = document.getElementById("pvPinMsg");
+  // Host NO ve palabra: solo tema y anuncio
+  document.getElementById("hostAnnounce").textContent =
+    `Sala: ${room}\nRonda: ${round}\nJugadores: ${nPlayers}\nImpostores: ${k}\n\n(Di/enseña “Sala ${room}, ronda ${round}”)`;
 
-  pinBtn.onclick = async ()=>{
-    const pin = (pinInput.value || "").trim();
-    if(!/^\d{6}$/.test(pin)){
-      pinMsg.textContent = "Introduce un PIN de 6 dígitos.";
-      pinMsg.style.color = "#ffd6a6";
-      return;
-    }
-    pinMsg.textContent = "Verificando...";
-    pinMsg.style.color = "#a9b7d6";
+  document.getElementById("hostTheme").textContent = `Tema: ${out.topic}\n\n(La palabra NO se muestra al anfitrión)`;
 
-    try{
-      const h = await sha256Hex(pin);
-      if(h === payload.pin_hash){
-        pinMsg.textContent = "PIN correcto ✅";
-        pinMsg.style.color = "#b9f6ca";
-        pinGate.style.display = "none";
-        controls.style.display = "block";
-        initReveal(payload);
-      }else{
-        pinMsg.textContent = "PIN incorrecto ❌";
-        pinMsg.style.color = "#ffb3b3";
-      }
-    }catch(e){
-      pinMsg.textContent = "Error verificando PIN.";
-      pinMsg.style.color = "#ffb3b3";
-    }
-  };
-
-  pinInput.addEventListener("keydown", (e)=>{
-    if(e.key === "Enter") pinBtn.click();
-  });
+  saveHost();
 }
 
-function initReveal(payload){
-  const theme = payload.topic || "Tema";
-  const isImp = payload.role === "IMPOSTOR";
+document.getElementById("hostCompute").addEventListener("click", ()=>hostUpdate());
+document.getElementById("hostNext").addEventListener("click", ()=>{
+  const r = Math.max(1, parseInt(document.getElementById("roundHost").value || "1", 10)) + 1;
+  document.getElementById("roundHost").value = String(r);
+  hostUpdate();
+});
+document.getElementById("hostReset").addEventListener("click", ()=>{
+  document.getElementById("roundHost").value = "1";
+  hostUpdate();
+});
 
-  const text = isImp
-    ? `Eres el IMPOSTOR 😈\nTema: ${theme}\nPalabra: (no la sabes)`
-    : `No eres impostor ✅\nTema: ${theme}\nPalabra: ${payload.word}`;
+/*** =========================
+ *  PLAYER actions
+ *  ========================= */
+function playerUpdate(){
+  const room = document.getElementById("roomPlayer").value.trim();
+  const round = Math.max(1, parseInt(document.getElementById("roundPlayer").value || "1", 10));
+  const slot = Math.max(1, parseInt(document.getElementById("slotPlayer").value || "1", 10));
+  const name = document.getElementById("namePlayer").value.trim();
 
-  document.getElementById("pvTitle").textContent = isImp ? "Impostor" : "Jugador normal";
+  // Los parámetros de la sala (N, K, topicMode, topicSel) deben coincidir con el anfitrión
+  // Para simplificar: el jugador los “toma” de lo guardado por el anfitrión SOLO si existe en su dispositivo.
+  // En dispositivos distintos: el anfitrión lo dice una vez al inicio (N y K) y se fija.
+  const nPlayers = Math.max(3, parseInt(localStorage.getItem(LS.playersH) || "6", 10));
+  const k = clampImpostors(nPlayers, parseInt(localStorage.getItem(LS.impostorsH) || "1", 10));
+  const topicMode = localStorage.getItem(LS.topicModeH) || "random";
+  const chosenTopic = localStorage.getItem(LS.topicSelH) || keys(DATA)[0];
 
-  const box = document.getElementById("pvBox");
-  const rev = document.getElementById("pvRevealBtn");
-  const hid = document.getElementById("pvHideBtn");
+  if(!room){
+    alert("Escribe la Sala (igual que la del anfitrión).");
+    return;
+  }
 
-  rev.onclick = ()=>{
-    box.textContent = text;
-    box.style.display = "block";
-    rev.style.display = "none";
-    hid.style.display = "inline-block";
-  };
-  hid.onclick = ()=>{
-    box.style.display = "none";
-    box.textContent = "";
-    rev.style.display = "inline-block";
-    hid.style.display = "none";
-  };
+  const out = computeRound({ room, round, nPlayers, kImpostors: k, topicMode, chosenTopic });
+
+  const isImp = out.impostors.has(slot);
+
+  document.getElementById("pvTheme").textContent = `Tema: ${out.topic}`;
+  document.getElementById("pvMe").textContent = name ? `Slot ${slot} (${name})` : `Slot ${slot}`;
+
+  const card = document.getElementById("playerCard");
+  card.style.display = "block";
+  card.textContent = isImp
+    ? `Eres el IMPOSTOR 😈\nTema: ${out.topic}\nPalabra: (no la sabes)`
+    : `No eres impostor ✅\nTema: ${out.topic}\nPalabra: ${out.word}`;
+
+  document.getElementById("playerHide").style.display = "inline-block";
+  savePlayer();
 }
 
-// Auto: si hay payload en URL, entra a player view
-const payload = readPayload();
-if(payload){
-  showPlayer(payload);
-}
+document.getElementById("playerSync").addEventListener("click", playerUpdate);
+document.getElementById("playerHide").addEventListener("click", ()=>{
+  document.getElementById("playerCard").style.display = "none";
+  document.getElementById("playerHide").style.display = "none";
+});
+
+// Primer render host
+hostUpdate();
 </script>
 </body>
 </html>
