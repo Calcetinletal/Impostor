@@ -62,6 +62,7 @@
             <div class="muted">
               Genera una ronda y pega los <b>links</b> en el grupo. Para evitar que abran el link de otros,
               activa <b>PIN</b> y envía a cada persona su <b>Slot + PIN</b> por DM.
+              <br><span class="oktxt">Nota:</span> el anfitrión <b>NO verá la palabra</b>.
             </div>
 
             <div class="row">
@@ -74,13 +75,8 @@
               <select id="topicSelect" style="display:none;"></select>
             </div>
 
-            <div class="row">
-              <input id="names" type="text" placeholder="Nombres opcionales (coma): Juan, Isabel, Miguel..." />
-            </div>
-
             <div class="row" style="justify-content:space-between">
               <label><input id="usePin" type="checkbox" checked> Usar PIN para revelar rol</label>
-              <label><input id="showNamesInList" type="checkbox"> Mostrar nombres en la lista</label>
             </div>
 
             <div class="hint">
@@ -137,6 +133,16 @@
 
         <div class="big" id="pvTitle">Tu rol</div>
 
+        <!-- Name -->
+        <div class="box" style="margin-top:12px;">
+          <div class="muted">Tu nombre (opcional):</div>
+          <div class="row">
+            <input id="pvName" type="text" placeholder="Escribe tu nombre..." />
+            <button id="pvSaveName" class="secondary">Guardar</button>
+          </div>
+          <div class="small">Se guarda solo en tu móvil/navegador.</div>
+        </div>
+
         <!-- PIN gate -->
         <div id="pinGate" class="box" style="margin-top:12px;">
           <div class="muted">Introduce tu PIN para ver tu rol:</div>
@@ -168,56 +174,46 @@ const DATA = {
     "España","Portugal","Francia","Italia","Alemania","Reino Unido","Irlanda","Grecia","Turquía","Marruecos",
     "Egipto","Israel","India","China","Japón","Corea del Sur","Australia","Estados Unidos","Canadá","México"
   ],
-
   "Animales": [
     "Perro","Gato","Caballo","Vaca","Oveja","Cerdo","Conejo","Elefante","Tigre","León",
     "Jirafa","Cebra","Oso panda","Koala","Lobo","Delfín","Tiburón","Pingüino","Águila","Serpiente"
   ],
-
   "Famosos (muy conocidos)": [
     "Lionel Messi","Cristiano Ronaldo","Arnold Schwarzenegger","Will Smith","Tom Cruise","Leonardo DiCaprio","Brad Pitt","Johnny Depp","Dwayne Johnson","Keanu Reeves",
     "Justin Bieber","Taylor Swift","Shakira","Beyoncé","Rihanna","Adele","Ed Sheeran","Bad Bunny","Drake","Eminem",
     "Rafa Nadal","Carlos Alcaraz","Michael Jordan","LeBron James","Kim Kardashian","Elon Musk","Bill Gates","Mark Zuckerberg","Jeff Bezos","Oprah Winfrey"
   ],
-
   "Políticos y líderes (muy conocidos)": [
     "Donald Trump","Joe Biden","Barack Obama","Vladimir Putin","Xi Jinping","Volodímir Zelenski","Nicolás Maduro","Javier Milei",
     "Pedro Sánchez","Mariano Rajoy","Santiago Abascal","Arnaldo Otegi","Felipe VI","Juan Carlos I",
     "Emmanuel Macron","Giorgia Meloni","Ursula von der Leyen","Justin Trudeau","Angela Merkel"
   ],
-
   "Figuras históricas (muy conocidas)": [
     "Albert Einstein","Napoleón Bonaparte","Wolfgang Amadeus Mozart","Miguel de Cervantes","Mahatma Gandhi",
     "Isaac Newton","Leonardo da Vinci","Julio César","Alejandro Magno","Cleopatra",
     "Cristóbal Colón","Simón Bolívar","Martin Luther King Jr.","Nelson Mandela","Winston Churchill",
     "Adolf Hitler","Joseph Stalin","Beethoven","William Shakespeare","Marie Curie"
   ],
-
   "Profesiones": [
     "Médico","Enfermero","Profesor","Ingeniero","Arquitecto","Abogado","Juez","Policía","Bombero","Piloto",
     "Cocinero","Camarero","Mecánico","Electricista","Fontanero","Carpintero","Periodista","Fotógrafo","Veterinario","Programador"
   ],
-
   "Comidas y Bebidas": [
     "Paella","Tortilla de patatas","Gazpacho","Croquetas","Jamón ibérico","Pizza","Hamburguesa","Sushi","Ramen","Tacos",
     "Burrito","Kebab","Pasta carbonara","Curry","Ceviche","Café","Té","Zumo de naranja","Cerveza","Vino"
   ],
-
   "Lugares comunes": [
     "Playa","Montaña","Parque","Bosque","Río","Lago","Centro comercial","Supermercado","Aeropuerto","Estación de tren",
     "Hospital","Colegio","Universidad","Biblioteca","Museo","Cine","Restaurante","Bar","Gimnasio","Hotel"
   ],
-
   "Edificios y monumentos (muy conocidos)": [
     "Torre Eiffel","Coliseo de Roma","Sagrada Familia","Alhambra","Big Ben","Taj Mahal","Estatua de la Libertad","Gran Muralla China","Pirámides de Giza","Machu Picchu",
     "Ópera de Sídney","Burj Khalifa","Kremlin","Basílica de San Pedro","Notre Dame","Palacio de Versalles","Torre de Pisa","Puerta de Brandeburgo","Stonehenge","Mezquita-Catedral de Córdoba"
   ],
-
   "Objetos comunes": [
     "Móvil","Cargador","Auriculares","Portátil","Teclado","Ratón","Televisor","Mando a distancia","Altavoz","Reloj",
     "Llaves","Cartera","Mochila","Botella de agua","Vaso","Taza","Plato","Cuchillo","Tenedor","Cuchara"
   ],
-
   "Conocidos (privado)": [
     "Loren","Aita","Ama","Nerea","Ainhoa","Javi","Juan","Isabel","Miguel","Nelson",
     "Ernesto","Ane","Judit","Amona","Amoñi","Mamen","Fugas","Txiki","La atia"
@@ -230,11 +226,6 @@ const DATA = {
 function randInt(n){ return Math.floor(Math.random()*n); }
 function pick(arr){ return arr[randInt(arr.length)]; }
 function keys(obj){ return Object.keys(obj); }
-
-function parseNames(raw){
-  if(!raw) return [];
-  return raw.split(",").map(s=>s.trim()).filter(Boolean);
-}
 
 // Base64 URL-safe (para hash en URL)
 function b64e(str){
@@ -266,11 +257,10 @@ function sampleUniquePlayers(nPlayers, k){
   return chosen;
 }
 function generatePin6(){
-  // 6 dígitos (000000–999999)
   return String(Math.floor(Math.random() * 1000000)).padStart(6, "0");
 }
 
-// SHA-256(hex) usando WebCrypto (disponible en navegadores modernos)
+// SHA-256(hex) usando WebCrypto
 async function sha256Hex(str){
   const data = new TextEncoder().encode(str);
   const buf = await crypto.subtle.digest("SHA-256", data);
@@ -308,16 +298,12 @@ async function hostGenerate(){
 
   const mode = document.getElementById("topicMode").value;
   const topic = mode === "choose" ? document.getElementById("topicSelect").value : pick(keys(DATA));
-  const word = pick(DATA[topic]);
+  const word = pick(DATA[topic]); // se genera igual, pero NO se muestra al host
 
   const usePin = document.getElementById("usePin").checked;
-  const showNamesInList = document.getElementById("showNamesInList").checked;
-  const names = parseNames(document.getElementById("names").value);
-
   const impostorSet = sampleUniquePlayers(n, k);
   const baseUrl = location.href.split("#")[0].split("?")[0];
 
-  // Si hay PIN, generamos PIN por slot y guardamos su hash en payload (NO el PIN)
   const pins = new Array(n).fill(null);
   const pinHashes = new Array(n).fill(null);
   if(usePin){
@@ -330,41 +316,36 @@ async function hostGenerate(){
   const links = [];
   for(let i=1;i<=n;i++){
     const isImp = impostorSet.has(i);
-    const displayName = names[i-1] || null; // opcional
     const payload = makePayload({
-      v: 4,
+      v: 5,
       role: isImp ? "IMPOSTOR" : "NORMAL",
-      slot: i,            // "slot" para no ligar a persona
-      name: displayName,  // opcional (si quieres)
+      slot: i,
       topic,
       word: isImp ? null : word,
       pin_hash: usePin ? pinHashes[i-1] : null
     });
     links.push({
       slot: i,
-      name: displayName,
       url: `${baseUrl}#p=${payload}`,
       pin: usePin ? pins[i-1] : null
     });
   }
 
-  // Summary
+  // Summary SIN palabra
   const summary = document.getElementById("summary");
   summary.innerHTML =
     `Ronda lista. Tema: <b>${topic}</b>. Impostores: <b>${k}</b>. ` +
-    `(El anfitrión sabe la palabra: <b>${word}</b>). ` +
     (usePin ? `<span class="oktxt">PIN activado</span>.` : `<span class="warn">PIN desactivado</span>.`);
 
   // Render list
   const box = document.getElementById("links");
   box.style.display = "block";
   box.innerHTML = links.map(x => {
-    const label = showNamesInList && x.name ? `Slot ${x.slot} (${x.name})` : `Slot ${x.slot}`;
     const pinPart = usePin ? `<span class="pill">PIN: ${x.pin}</span>` : `<span class="pill">sin PIN</span>`;
     return `
       <div class="linkrow">
         <div class="left">
-          <b>${label}</b>
+          <b>Slot ${x.slot}</b>
           <a href="${x.url}">${x.url}</a>
           ${pinPart}
         </div>
@@ -395,8 +376,7 @@ async function hostGenerate(){
     btn.addEventListener("click", async ()=>{
       const slot = parseInt(btn.getAttribute("data-copydm"), 10);
       const x = links.find(z => z.slot === slot);
-      const who = (x.name ? `Hola ${x.name}. ` : "");
-      const msg = `${who}Tu slot es ${x.slot}.\nLink: ${x.url}\nPIN: ${x.pin}\n(No lo compartas)`;
+      const msg = `Tu slot es ${x.slot}.\nLink: ${x.url}\nPIN: ${x.pin}\n(No lo compartas)`;
       try{
         await navigator.clipboard.writeText(msg);
         btn.textContent="¡DM copiado!";
@@ -425,13 +405,10 @@ async function hostGenerate(){
   copyDMBtn.style.display = usePin ? "inline-block" : "none";
   copyDMBtn.onclick = async ()=>{
     if(!usePin) return;
-    const text = links.map(x => {
-      const who = x.name ? `(${x.name}) ` : "";
-      return `DM ${who}Slot ${x.slot}\nLink: ${x.url}\nPIN: ${x.pin}\n`;
-    }).join("\n");
+    const text = links.map(x => `Slot ${x.slot}\nLink: ${x.url}\nPIN: ${x.pin}\n`).join("\n");
     try{
       await navigator.clipboard.writeText(text);
-      alert("Copiado. Ahora pega y reparte por DM (separando cada bloque).");
+      alert("Copiado. Ahora reparte por DM (separando cada bloque).");
     }catch(e){
       alert("No pude copiar. Copia manualmente desde la lista.");
     }
@@ -451,7 +428,7 @@ function hostReset(){
 document.getElementById("newRound").addEventListener("click", ()=>{
   hostGenerate().catch(err=>{
     console.error(err);
-    alert("Error generando ronda. Tu navegador soporta WebCrypto? (debería).");
+    alert("Error generando ronda. (¿Navegador muy antiguo?)");
   });
 });
 document.getElementById("reset").addEventListener("click", hostReset);
@@ -459,6 +436,8 @@ document.getElementById("reset").addEventListener("click", hostReset);
 /*** =========================
  *  PLAYER VIEW
  *  ========================= */
+function slotKey(slot){ return `impostor_name_slot_${slot}`; }
+
 function showPlayer(payload){
   document.getElementById("hostView").style.display = "none";
   document.getElementById("playerView").style.display = "block";
@@ -466,8 +445,26 @@ function showPlayer(payload){
   const theme = payload.topic || "Tema";
   document.getElementById("pvTheme").textContent = `Tema: ${theme}`;
 
-  const who = payload.name ? `Slot ${payload.slot} (${payload.name})` : `Slot ${payload.slot ?? "?"}`;
-  document.getElementById("pvWho").textContent = who;
+  const slot = payload.slot ?? "?";
+  const savedName = (slot !== "?" ? localStorage.getItem(slotKey(slot)) : "") || "";
+  const nameLabel = savedName ? `Slot ${slot} (${savedName})` : `Slot ${slot}`;
+  document.getElementById("pvWho").textContent = nameLabel;
+
+  // name input
+  const pvName = document.getElementById("pvName");
+  const pvSave = document.getElementById("pvSaveName");
+  pvName.value = savedName;
+  pvSave.onclick = () => {
+    const newName = pvName.value.trim();
+    if(slot === "?") return;
+    if(newName){
+      localStorage.setItem(slotKey(slot), newName);
+      document.getElementById("pvWho").textContent = `Slot ${slot} (${newName})`;
+    }else{
+      localStorage.removeItem(slotKey(slot));
+      document.getElementById("pvWho").textContent = `Slot ${slot}`;
+    }
+  };
 
   // PIN gate
   const needsPin = !!payload.pin_hash;
@@ -516,7 +513,6 @@ function showPlayer(payload){
     }
   };
 
-  // enter = verify
   pinInput.addEventListener("keydown", (e)=>{
     if(e.key === "Enter") pinBtn.click();
   });
