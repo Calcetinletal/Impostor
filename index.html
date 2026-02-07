@@ -107,7 +107,7 @@
       <!-- PLAYER VIEW -->
       <div id="playerView" style="display:none;">
         <div class="muted">
-          Estás viendo tu carta. Pon tu nombre si quieres, y pulsa <b>Revelar</b> cuando estés a solas.
+          Estás viendo tu carta. Pulsa <b>Revelar</b> cuando estés a solas.
         </div>
 
         <div class="row" style="justify-content:space-between">
@@ -116,16 +116,6 @@
         </div>
 
         <div class="big" id="pvTitle">Tu rol</div>
-
-        <!-- Name -->
-        <div class="box" style="margin-top:12px;">
-          <div class="muted">Tu nombre (opcional):</div>
-          <div class="row">
-            <input id="pvName" type="text" placeholder="Escribe tu nombre..." />
-            <button id="pvSaveName" class="secondary">Guardar</button>
-          </div>
-          <div class="hint">Se guarda solo en tu móvil/navegador (no lo ven los demás).</div>
-        </div>
 
         <div class="row">
           <button id="pvRevealBtn" class="ok">Revelar</button>
@@ -150,13 +140,15 @@ const DATA = {
   "Animales": ["Perro","Gato","Caballo","Vaca","Oveja","Cerdo","Conejo","Elefante","Tigre","León","Jirafa","Cebra","Oso panda","Koala","Lobo","Delfín","Tiburón","Pingüino","Águila","Serpiente"],
   "Famosos (muy conocidos)": ["Lionel Messi","Cristiano Ronaldo","Arnold Schwarzenegger","Will Smith","Tom Cruise","Leonardo DiCaprio","Brad Pitt","Johnny Depp","Dwayne Johnson","Keanu Reeves","Justin Bieber","Taylor Swift","Shakira","Beyoncé","Rihanna","Adele","Ed Sheeran","Bad Bunny","Drake","Eminem","Rafa Nadal","Carlos Alcaraz","Michael Jordan","LeBron James","Kim Kardashian","Elon Musk","Bill Gates","Mark Zuckerberg","Jeff Bezos","Oprah Winfrey"],
   "Políticos y líderes (muy conocidos)": ["Donald Trump","Joe Biden","Barack Obama","Vladimir Putin","Xi Jinping","Volodímir Zelenski","Nicolás Maduro","Javier Milei","Pedro Sánchez","Mariano Rajoy","Santiago Abascal","Arnaldo Otegi","Felipe VI","Juan Carlos I","Emmanuel Macron","Giorgia Meloni","Ursula von der Leyen","Justin Trudeau","Angela Merkel"],
-  "Figuras históricas (muy conocidas)": ["Albert Einstein","Napoleón Bonaparte","Wolfgang Amadeus Mozart","Miguel de Cervantes","Mahatma Gandhi","Isaac Newton","Leonardo da Vinci","Julio César","Alejandro Magno","Cleopatra","Cristóbal Colón","Simón Bolívar","Martin Luther King Jr.","Nelson Mandela","Winston Churchill","Adolf Hitler","Joseph Stalin","Beethoven","William Shakespeare","Marie Curie"],
+  "Peliculas o series": ["El Padrino","Star Wars","Jurassic Park","El señor de los anillos","Harry Potter","Los Vengadores","Titanic","Breaking Bad","24","Forrest Gump","El bueno, el feo y el malo","Matrix","Tiburón","E.T. El extraterrestre","Gladiator","Giorgia Meloni","Indiana Jones","Solo en casa","One Piece","Dragon Ball","Pokemon","Lo que el viento se llevo", "Los Simpsons"],
+  "Figuras históricas (muy conocidos)": ["Albert Einstein","Napoleón Bonaparte","Wolfgang Amadeus Mozart","Miguel de Cervantes","Mahatma Gandhi","Isaac Newton","Leonardo da Vinci","Julio César","Alejandro Magno","Cleopatra","Cristóbal Colón","Simón Bolívar","Martin Luther King Jr.","Nelson Mandela","Winston Churchill","Adolf Hitler","Joseph Stalin","Beethoven","William Shakespeare","Marie Curie"],
   "Profesiones": ["Médico","Enfermero","Profesor","Ingeniero","Arquitecto","Abogado","Juez","Policía","Bombero","Piloto","Cocinero","Camarero","Mecánico","Electricista","Fontanero","Carpintero","Periodista","Fotógrafo","Veterinario","Programador"],
   "Comidas y Bebidas": ["Paella","Tortilla de patatas","Gazpacho","Croquetas","Jamón ibérico","Pizza","Hamburguesa","Sushi","Ramen","Tacos","Burrito","Kebab","Pasta carbonara","Curry","Ceviche","Café","Té","Zumo de naranja","Cerveza","Vino"],
   "Lugares comunes": ["Playa","Montaña","Parque","Bosque","Río","Lago","Centro comercial","Supermercado","Aeropuerto","Estación de tren","Hospital","Colegio","Universidad","Biblioteca","Museo","Cine","Restaurante","Bar","Gimnasio","Hotel"],
   "Edificios y monumentos (muy conocidos)": ["Torre Eiffel","Coliseo de Roma","Sagrada Familia","Alhambra","Big Ben","Taj Mahal","Estatua de la Libertad","Gran Muralla China","Pirámides de Giza","Machu Picchu","Ópera de Sídney","Burj Khalifa","Kremlin","Basílica de San Pedro","Notre Dame","Palacio de Versalles","Torre de Pisa","Puerta de Brandeburgo","Stonehenge","Mezquita-Catedral de Córdoba"],
   "Objetos comunes": ["Móvil","Cargador","Auriculares","Portátil","Teclado","Ratón","Televisor","Mando a distancia","Altavoz","Reloj","Llaves","Cartera","Mochila","Botella de agua","Vaso","Taza","Plato","Cuchillo","Tenedor","Cuchara"],
-  "Conocidos (privado)": ["Loren","Aita","Ama","Nerea","Ainhoa","Javi","Juan","Isabel","Miguel","Nelson","Ernesto","Ane","Judit","Amona","Amoñi","Mamen","Fugas","Txiki","La atia"]
+  "Conocidos (privado)": ["Loren-hijo","Aita","Ama","Nerea","Ainhoa","Javi","Juan","Isabel","Jose Mari","Mirentxu","Miguel-hijo","Nelson","Ernesto","Ane","Judit","Amona","Amoñi","Mamen","Fugas","Txiki","La atia","Cotorra asesina","Andoni","Iñaki","Manu","Bakartxo","Ignacio","Fernando-padre",""],
+  "Objetos conocidos (privado)": ["Nueces del aita","Camisetas de vagabundo de la ama","Mayonesa de Nerea","Cremitas de Lorange","Montaña de ropa de Ainhoa","Marihuana de Javi","Cuadro de Juan","Uñas de Miguel","Mierda de Fugas/Txiki de la terraza","Especias caducadas de 1970 del frigorífico","Furgoneta del aita","Cerezas de Juan","Perchas de Isabel","Master de Ane"]
 };
 
 /*** =========================
@@ -299,8 +291,6 @@ function hostReset(){
 /*** =========================
  *  PLAYER view
  *  ========================= */
-function slotKey(slot){ return `impostor_name_slot_${slot}`; }
-
 function showPlayer(payload){
   document.getElementById("hostView").style.display = "none";
   document.getElementById("playerView").style.display = "block";
@@ -309,24 +299,7 @@ function showPlayer(payload){
   document.getElementById("pvTheme").textContent = `Tema: ${theme}`;
 
   const slot = payload.slot ?? "?";
-  const savedName = (slot !== "?" ? localStorage.getItem(slotKey(slot)) : "") || "";
-  document.getElementById("pvWho").textContent = savedName ? `Slot ${slot} (${savedName})` : `Slot ${slot}`;
-
-  // name input
-  const pvName = document.getElementById("pvName");
-  const pvSave = document.getElementById("pvSaveName");
-  pvName.value = savedName;
-  pvSave.onclick = () => {
-    const newName = pvName.value.trim();
-    if(slot === "?") return;
-    if(newName){
-      localStorage.setItem(slotKey(slot), newName);
-      document.getElementById("pvWho").textContent = `Slot ${slot} (${newName})`;
-    }else{
-      localStorage.removeItem(slotKey(slot));
-      document.getElementById("pvWho").textContent = `Slot ${slot}`;
-    }
-  };
+  document.getElementById("pvWho").textContent = `Slot ${slot}`;
 
   const isImp = payload.role === "IMPOSTOR";
   document.getElementById("pvTitle").textContent = isImp ? "Impostor" : "Jugador normal";
