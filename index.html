@@ -136,20 +136,133 @@
  *  LISTAS (DATA)
  *  ========================= */
 const DATA = {
-  "Países": ["España","Portugal","Francia","Italia","Alemania","Reino Unido","Irlanda","Grecia","Turquía","Marruecos","Egipto","Israel","India","China","Japón","Corea del Sur","Australia","Estados Unidos","Canadá","México"],
-  "Animales": ["Perro","Gato","Caballo","Vaca","Oveja","Cerdo","Conejo","Elefante","Tigre","León","Jirafa","Cebra","Oso panda","Koala","Lobo","Delfín","Tiburón","Pingüino","Águila","Serpiente"],
-  "Famosos (muy conocidos)": ["Lionel Messi","Cristiano Ronaldo","Arnold Schwarzenegger","Will Smith","Tom Cruise","Leonardo DiCaprio","Brad Pitt","Johnny Depp","Dwayne Johnson","Keanu Reeves","Justin Bieber","Taylor Swift","Shakira","Beyoncé","Rihanna","Adele","Ed Sheeran","Bad Bunny","Drake","Eminem","Rafa Nadal","Carlos Alcaraz","Michael Jordan","LeBron James","Kim Kardashian","Elon Musk","Bill Gates","Mark Zuckerberg","Jeff Bezos","Oprah Winfrey"],
-  "Políticos y líderes (muy conocidos)": ["Donald Trump","Joe Biden","Barack Obama","Vladimir Putin","Xi Jinping","Volodímir Zelenski","Nicolás Maduro","Javier Milei","Pedro Sánchez","Mariano Rajoy","Santiago Abascal","Arnaldo Otegi","Felipe VI","Juan Carlos I","Emmanuel Macron","Giorgia Meloni","Ursula von der Leyen","Justin Trudeau","Angela Merkel"],
-  "Peliculas o series": ["El Padrino","Star Wars","Jurassic Park","El señor de los anillos","Harry Potter","Los Vengadores","Titanic","Breaking Bad","24","Forrest Gump","El bueno, el feo y el malo","Matrix","Tiburón","E.T. El extraterrestre","Gladiator","Giorgia Meloni","Indiana Jones","Solo en casa","One Piece","Dragon Ball","Pokemon","Lo que el viento se llevo", "Los Simpsons"],
-  "Figuras históricas (muy conocidos)": ["Albert Einstein","Napoleón Bonaparte","Wolfgang Amadeus Mozart","Miguel de Cervantes","Mahatma Gandhi","Isaac Newton","Leonardo da Vinci","Julio César","Alejandro Magno","Cleopatra","Cristóbal Colón","Simón Bolívar","Martin Luther King Jr.","Nelson Mandela","Winston Churchill","Adolf Hitler","Joseph Stalin","Beethoven","William Shakespeare","Marie Curie"],
-  "Profesiones": ["Médico","Enfermero","Profesor","Ingeniero","Arquitecto","Abogado","Juez","Policía","Bombero","Piloto","Cocinero","Camarero","Mecánico","Electricista","Fontanero","Carpintero","Periodista","Fotógrafo","Veterinario","Programador"],
-  "Comidas y Bebidas": ["Paella","Tortilla de patatas","Gazpacho","Croquetas","Jamón ibérico","Pizza","Hamburguesa","Sushi","Ramen","Tacos","Burrito","Kebab","Pasta carbonara","Curry","Ceviche","Café","Té","Zumo de naranja","Cerveza","Vino"],
-  "Lugares comunes": ["Playa","Montaña","Parque","Bosque","Río","Lago","Centro comercial","Supermercado","Aeropuerto","Estación de tren","Hospital","Colegio","Universidad","Biblioteca","Museo","Cine","Restaurante","Bar","Gimnasio","Hotel"],
-  "Edificios y monumentos (muy conocidos)": ["Torre Eiffel","Coliseo de Roma","Sagrada Familia","Alhambra","Big Ben","Taj Mahal","Estatua de la Libertad","Gran Muralla China","Pirámides de Giza","Machu Picchu","Ópera de Sídney","Burj Khalifa","Kremlin","Basílica de San Pedro","Notre Dame","Palacio de Versalles","Torre de Pisa","Puerta de Brandeburgo","Stonehenge","Mezquita-Catedral de Córdoba"],
-  "Objetos comunes": ["Móvil","Cargador","Auriculares","Portátil","Teclado","Ratón","Televisor","Mando a distancia","Altavoz","Reloj","Llaves","Cartera","Mochila","Botella de agua","Vaso","Taza","Plato","Cuchillo","Tenedor","Cuchara"],
-  "Conocidos (privado)": ["Loren-hijo","Aita","Ama","Nerea","Ainhoa","Javi","Juan","Isabel","Jose Mari","Mirentxu","Miguel-hijo","Nelson","Ernesto","Ane","Judit","Amona","Amoñi","Mamen","Fugas","Txiki","La atia","Cotorra asesina","Andoni","Iñaki","Manu","Bakartxo","Ignacio","Fernando-padre",""],
-  "Objetos conocidos (privado)": ["6000 euros de Javi","Estatua Guatemalteca","Foto comunión de Ainhoa","Comida del Spar","Estrella del arbol de navidad del portal","Nueces del aita","Camisetas de vagabundo de la ama","Mayonesa de Nerea","Cremitas de Lorange","Montaña de ropa de Ainhoa","Marihuana de Javi","Cuadro de Juan","Uñas de Miguel","Mierda de Fugas/Txiki de la terraza","Especias caducadas de 1970 del frigorífico","Furgoneta del aita","Cerezas de Juan","Perchas de Isabel","Master de Ane"]
+  "Países": [
+    // ✅ TU LISTA ORIGINAL (sin tocar)
+    "España","Portugal","Francia","Italia","Alemania","Reino Unido","Irlanda","Grecia","Turquía","Marruecos","Egipto","Israel","India","China","Japón","Corea del Sur","Australia","Estados Unidos","Canadá","México",
+    // ➕ AÑADIDOS
+    "Argentina","Brasil","Chile","Colombia","Perú","Uruguay","Paraguay","Bolivia","Ecuador","Venezuela","Cuba","República Dominicana","Guatemala","Honduras","El Salvador","Nicaragua","Costa Rica","Panamá",
+    "Suecia","Noruega","Finlandia","Dinamarca","Islandia","Países Bajos","Bélgica","Suiza","Austria","Polonia","Chequia","Eslovaquia","Hungría","Rumanía","Bulgaria","Serbia","Croacia","Eslovenia","Bosnia y Herzegovina","Albania","Ucrania","Rusia","Bielorrusia","Lituania","Letonia","Estonia","Luxemburgo",
+    "Sudáfrica","Nigeria","Ghana","Kenia","Etiopía","Tanzania","Uganda","Senegal","Argelia","Túnez","Libia",
+    "Arabia Saudí","Emiratos Árabes Unidos","Qatar","Kuwait","Omán","Irán","Irak","Siria","Líbano","Jordania",
+    "Tailandia","Vietnam","Indonesia","Filipinas","Malasia","Singapur","Pakistán","Bangladés","Sri Lanka","Nepal","Myanmar","Camboya","Laos","Mongolia",
+    "Nueva Zelanda"
+  ],
+
+  "Animales": [
+    // ✅ TU LISTA ORIGINAL (sin tocar)
+    "Perro","Gato","Caballo","Vaca","Oveja","Cerdo","Conejo","Elefante","Tigre","León","Jirafa","Cebra","Oso panda","Koala","Lobo","Delfín","Tiburón","Pingüino","Águila","Serpiente",
+    // ➕ AÑADIDOS
+    "Cocodrilo","Hipopótamo","Rinoceronte","Gorila","Chimpancé","Orangután","Oso polar","Oso pardo","Zorro","Ciervo","Jabalí",
+    "Camello","Dromedario","Llama","Alpaca","Canguro","Bisonte","Búfalo","Cabra","Burro","Mula",
+    "Gallina","Gallo","Pato","Cisne","Pavo","Avestruz","Flamenco","Loro","Periquito","Paloma","Cuervo","Búho","Halcón",
+    "Ballena","Orca","Foca","León marino","Nutria","Castor",
+    "Pulpo","Calamar","Cangrejo","Langosta","Medusa","Caracol","Estrella de mar","Erizo de mar",
+    "Rana","Sapo","Tortuga","Iguana","Camaleón","Lagarto",
+    "Mariposa","Abeja","Hormiga","Mosquito","Escarabajo","Libélula","Araña","Escorpión"
+  ],
+
+  "Famosos (muy conocidos)": [
+    // ✅ TU LISTA ORIGINAL (sin tocar) — aquí está John Wayne
+    "Lionel Messi","Cristiano Ronaldo","Arnold Schwarzenegger","Will Smith","Tom Cruise","Leonardo DiCaprio","Brad Pitt","Johnny Depp","Dwayne Johnson (La Roca)","Keanu Reeves","Justin Bieber","Taylor Swift","Shakira","Beyoncé","Rihanna","Adele","Ed Sheeran","Bad Bunny","Drake","Eminem","Rafa Nadal","Carlos Alcaraz","Michael Jordan","LeBron James","Kim Kardashian","Mark Zuckerberg","Jeff Bezos","Oprah Winfrey","Julio Iglesias","Bill Gates","Tiger Woods", "Usain Bolt","Fernando Alonso","Ibai","Clint Eastwood","John Wayne","Elon Musk","Jackie Chan","Arguiñano",
+    // ➕ AÑADIDOS
+    "Novak Djokovic","Roger Federer","Serena Williams","Lewis Hamilton","Zinedine Zidane","Ronaldinho","David Beckham",
+    "Robert De Niro","Al Pacino","Morgan Freeman","Denzel Washington","Matt Damon","Ben Affleck","Hugh Jackman","Jason Statham","Sylvester Stallone",
+    "Scarlett Johansson","Angelina Jolie","Lady Gaga","Shakira",
+    "Rosalía","El Rubius","Piqué","Sergio Ramos","Iniesta","Xavi","Steve Jobs","Warren Buffett"
+  ],
+
+  "Políticos y líderes (muy conocidos)": [
+    // ✅ TU LISTA ORIGINAL (sin tocar)
+    "Donald Trump","Joe Biden","Barack Obama","Vladimir Putin","Xi Jinping","Volodímir Zelenski","Nicolás Maduro","Javier Milei","Pedro Sánchez","Mariano Rajoy","Santiago Abascal","Arnaldo Otegi","Felipe VI","Juan Carlos I","Emmanuel Macron","Giorgia Meloni","Ursula von der Leyen","Justin Trudeau","Angela Merkel","Claudia Sheinbaum",
+    // ➕ AÑADIDOS
+    "Benjamin Netanyahu","Recep Tayyip Erdoğan","Kim Jong Un",
+    "Yolanda Díaz","Isabel Díaz Ayuso","Pablo Iglesias","Albert Rivera","Echenique","Gabriel Rufian","José Luis Rodriguez Zapatero","Jose Maria Aznar","Odón Elorza"
+  ],
+
+  "Peliculas o series": [
+    // ✅ TU LISTA ORIGINAL (sin tocar, incluyendo el “Giorgia Meloni”)
+    "El Padrino","Star Wars","Jurassic Park","El señor de los anillos","Harry Potter","Los Vengadores","Titanic","Breaking Bad","24","Forrest Gump","El bueno, el feo y el malo","Matrix","Tiburón","E.T. El extraterrestre","Gladiator","Giorgia Meloni","Indiana Jones","Solo en casa","One Piece","Dragon Ball","Pokemon","Lo que el viento se llevo", "Los Simpsons",
+    // ➕ AÑADIDOS
+    "Juego de Tronos","Stranger Things","La Casa de Papel","The Walking Dead","Friends","The Office","Black Mirror",
+    "El Caballero Oscuro","Batman Begins","Inception","Interstellar","Pulp Fiction","Kill Bill","Rocky","Rambo",
+    "Terminator","Regreso al futuro","Shrek","Toy Story","El Rey León","Buscando a Nemo","Monstruos S.A.",
+    "Piratas del Caribe","Spiderman","Iron Man","Doctor Strange","Avatar","El retorno del rey",
+    "Naruto","Attack on Titan","Death Note","Demon Slayer","Fullmetal Alchemist",
+    "Sherlock","Peaky Blinders","The Boys","Vikings","The Crown","House of Cards","Prison Break"
+  ],
+
+  "Figuras históricas (muy conocidos)": [
+    // ✅ TU LISTA ORIGINAL (sin tocar)
+    "Albert Einstein","Napoleón Bonaparte","Wolfgang Amadeus Mozart","Miguel de Cervantes","Mahatma Gandhi","Isaac Newton","Leonardo da Vinci","Julio César","Alejandro Magno","Cleopatra","Cristóbal Colón","Simón Bolívar","Martin Luther King Jr.","Adolf Hitler","Joseph Stalin","Beethoven","William Shakespeare","Marie Curie",
+    // ➕ AÑADIDOS
+    "Charles Darwin","Galileo Galilei","Nikola Tesla","Thomas Edison","Confucio","Gengis Kan","Marco Polo",
+    "Isabel la Católica","Carlos V","Felipe II","Juana de Arco",
+    "George Washington","Abraham Lincoln","Franklin D. Roosevelt","Winston Churchill","Margaret Thatcher","Nelson Mandela","Blas de Lezo","Pelayo","Rodrigo Diaz de Vivar (El Cid)","Juan Sebastian El Cano","Ignacio de Loyola","Francisco Franco", "Antonio Primo de Rivera","Francis Drake","Juana la loca","Fernando VII","Napoleón","Lenin","Sabino Arana","Moctezuma"
+  ],
+
+  "Profesiones": [
+    // ✅ TU LISTA ORIGINAL (sin tocar)
+    "Médico","Enfermero","Profesor","Ingeniero","Arquitecto","Abogado","Juez","Policía","Bombero","Piloto","Cocinero","Camarero","Mecánico","Electricista","Fontanero","Carpintero","Periodista","Fotógrafo","Veterinario","Programador",
+    // ➕ AÑADIDOS
+    "Aparejador","Albañil","Pintor","Yesero","Soldador","Herrero","Cristalero","Jardinero","Agricultor","Ganadero","Pescador",
+    "Cajero","Dependiente","Repartidor","Taxista","Conductor de autobús","Trenista","Marinero",
+    "Farmacéutico","Dentista","Psicólogo","Fisioterapeuta","Nutricionista",
+    "Diseñador gráfico","Diseñador de interiores","Actor","Músico","Cantante","Streamer",
+    "Contable","Economista","Administrativo","Comercial",
+    "Biólogo","Químico","Físico","Matemático"
+  ],
+
+  "Comidas y Bebidas": [
+    // ✅ TU LISTA ORIGINAL (sin tocar)
+    "Paella","Tortilla de patatas","Gazpacho","Croquetas","Jamón ibérico","Pizza","Hamburguesa","Sushi","Ramen","Tacos","Burrito","Kebab","Pasta carbonara","Curry","Ceviche","Café","Té","Zumo de naranja","Cerveza","Vino",
+    // ➕ AÑADIDOS
+    "Pulpo a la gallega","Churros","Torrijas","Empanada","Bocadillo","Patatas bravas",
+    "Lasaña","Helado","Chocolate","Tarta de queso","Flan","Tiramisú",
+    "Agua con gas","Sidra","Champán","Whisky","Ginebra","Ron"
+  ],
+
+  "Lugares comunes": [
+    // ✅ TU LISTA ORIGINAL (sin tocar)
+    "Playa","Montaña","Parque","Bosque","Río","Lago","Centro comercial","Supermercado","Aeropuerto","Estación de tren","Hospital","Colegio","Universidad","Biblioteca","Museo","Cine","Restaurante","Bar","Gimnasio","Hotel",
+    // ➕ AÑADIDOS
+    "Cafetería","Panadería","Carnicería","Frutería","Mercado","Farmacia","Gasolinera","Parking",
+    "Ayuntamiento","Correos","Banco","Comisaría","Juzgado",
+    "Teatro","Estadio","Polideportivo","Piscina","Plaza","Calle","Avenida","Rotonda",
+    "Estación de autobuses","Metro","Puerto","Parada de taxi","Mirador","Discoteca"
+  ],
+
+  "Edificios y monumentos (muy conocidos)": [
+    // ✅ TU LISTA ORIGINAL (sin tocar)
+    "Torre Eiffel","Coliseo de Roma","Sagrada Familia","Alhambra","Big Ben","Taj Mahal","Estatua de la Libertad","Gran Muralla China","Pirámides de Giza","Machu Picchu","Ópera de Sídney","Burj Khalifa","Kremlin","Basílica de San Pedro","Notre Dame","Palacio de Versalles","Torre de Pisa","Puerta de Brandeburgo","Stonehenge","Mezquita-Catedral de Córdoba",
+    // ➕ AÑADIDOS
+    "Louvre","Museo del Prado","Museo Británico","Empire State",
+    "Partenón","Cristo Redentor",
+    "Guggenheim Bilbao","Canal de Panamá","Catedral de Santiago","Catedral de Notre Dame (París)"
+  ],
+
+  "Objetos comunes": [
+    // ✅ TU LISTA ORIGINAL (sin tocar)
+    "Móvil","Cargador","Auriculares","Portátil","Teclado","Ratón","Televisor","Mando a distancia","Altavoz","Reloj","Llaves","Cartera","Mochila","Botella de agua","Vaso","Taza","Plato","Cuchillo","Tenedor","Cuchara",
+    // ➕ AÑADIDOS
+    "Bolígrafo","Lápiz","Cuaderno","Libro","Goma","Regla",
+    "Gafas","Gorra","Paraguas","Abrigo","Zapatillas","Calcetines",
+    "Toalla","Cepillo de dientes","Pasta de dientes","Peine","Secador",
+    "Sartén","Tabla de cortar","Microondas",
+    "Silla","Mesa","Sofá","Cama","Almohada","Manta","Lámpara",
+    "Tijeras","Cinta adhesiva","Martillo","Destornillador","Taladro","Linterna",
+    "Tarjeta bancaria","Billete","Monedas"
+  ],
+
+  // ⛔️ ESTAS DOS: SIN AÑADIR NADA (idénticas a tu mensaje)
+  "Conocidos (privado)": [
+    "Loren-hijo","Aita","Ama","Nerea","Ainhoa","Javi","Juan","Isabel","Jose Mari","Mirentxu","Miguel-hijo","Nelson","Ernesto","Ane","Judit","Amona","Amoñi","Mamen","Fugas","Txiki","La atia","Cotorra asesina","Andoni","Iñaki","Manu","Bakartxo","Ignacio","Fernando-padre"
+  ],
+
+  "Objetos conocidos (privado)": [
+    "6000 euros de Javi","Estatua Guatemalteca","Foto comunión de Ainhoa","Comida del Spar","Estrella del arbol de navidad del portal","Nueces del aita","Camisetas de vagabundo de la ama","Mayonesa de Nerea","Cremitas de Lorange","Montaña de ropa de Ainhoa","Marihuana de Javi","Cuadro de Juan","Uñas de Miguel","Mierda de Fugas/Txiki de la terraza","Especias caducadas de 1970 del frigorífico","Furgoneta del aita","Cerezas de Juan","Perchas de Isabel","Master de Ane","Viaje del Aita-Ama","El gramo de oro de Nerea","El portatil de 100 euros de Ainhoa"
+  ]
 };
+
 
 /*** =========================
  *  HELPERS
@@ -342,4 +455,5 @@ if(payload){
 </script>
 </body>
 </html>
+
 
